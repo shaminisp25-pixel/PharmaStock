@@ -1,9 +1,14 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import "./globals.css";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 
-export const metadata: Metadata = {
-  title: 'PharmaStock',
-  description: 'AI Powered Pharmaceutical Warehouse Management Platform',
+const inter = Inter({
+  subsets: ["latin"],
+});
+
+export const metadata = {
+  title: "PharmaStock",
+  description: "Modern Pharmaceutical Inventory SaaS",
 };
 
 export default function RootLayout({
@@ -13,7 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>
+  <ThemeProvider attribute="class">
+    {children}
+  </ThemeProvider>
+</body>
     </html>
   );
 }

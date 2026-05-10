@@ -43,9 +43,9 @@ export default function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-lg hover:-translate-y-2 transition"
+              className="glass-card rounded-[28px] p-8 shadow-xl hover:-translate-y-3 hover:shadow-2xl transition-all duration-300 cursor-pointer"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 mb-6" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-500 mb-6 shadow-lg shadow-cyan-400/30" /> 
 
               <h3 className="text-2xl font-bold text-[#02152f]">
                 {feature.title}

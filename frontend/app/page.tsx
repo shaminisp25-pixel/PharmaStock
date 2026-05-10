@@ -1,15 +1,15 @@
-import navbar from '@/components/home/navbar';
-import hero from '@/components/home/hero';
-import features from '@/components/home/features';
-import cta from '@/components/home/cta';
+import Navbar from '@/components/home/navbar';
+import Hero from '@/components/home/hero';
+import Features from '@/components/home/features';
+import CTA from '@/components/home/cta';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f5f9ff] overflow-hidden">
-      <navbar />
-      <hero />
-      <features />
-      <cta />
+    <main className="min-h-screen overflow-hidden bg-[#F6F8FC] text-[#0F172A] dark:bg-[#050816] dark:text-white transition-colors duration-300">
+      <Navbar />
+      <Hero />
+      <Features />
+      <CTA />
     </main>
   );
 }
