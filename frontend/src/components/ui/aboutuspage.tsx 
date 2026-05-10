@@ -1,0 +1,57 @@
+interface AboutUsPageProps {
+  isDarkMode: boolean;
+  subPage?: string;
+}
+
+export default function AboutUsPage({ isDarkMode, subPage }: AboutUsPageProps) {
+  return (
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-indigo-50 to-white text-gray-900'}`}>
+      <div className={`border-b ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-indigo-200'}`}>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <h1 className={`text-3xl mb-2 ${
+            isDarkMode
+              ? 'bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent'
+              : 'bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'
+          }`}>
+            About PharmaStock
+          </h1>
+          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
+            Leading pharmaceutical warehouse management platform
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="grid md:grid-cols-2 gap-8 mb-10">
+          <div className={`p-8 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-indigo-200'}`}>
+            <h3 className={`text-xl mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Our Mission</h3>
+            <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
+              To revolutionize pharmaceutical warehouse management through innovative technology and unwavering commitment to safety and compliance.
+            </p>
+          </div>
+
+          <div className={`p-8 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-indigo-200'}`}>
+            <h3 className={`text-xl mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Our Vision</h3>
+            <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
+              To be the global standard for pharmaceutical inventory management, ensuring medication safety and operational excellence worldwide.
+            </p>
+          </div>
+        </div>
+
+        <div className={`p-8 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-indigo-200'}`}>
+          <h3 className={`text-xl mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Our Team</h3>
+          <div className={`h-64 rounded-lg border-2 border-dashed flex items-center justify-center ${
+            isDarkMode ? 'border-gray-600 bg-gray-700/30' : 'border-indigo-300 bg-indigo-50'
+          }`}>
+            <div className="text-center">
+              <svg className={`w-12 h-12 mx-auto mb-2 ${isDarkMode ? 'text-gray-500' : 'text-indigo-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-indigo-400'}`}>Team Photos Placeholder</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

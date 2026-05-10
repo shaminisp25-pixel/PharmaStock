@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///Users/shamini/Projects/Designpharmastocksaashomepage/frontend/app/page.tsx"],"sourcesContent":["export default function Home() {\n  return (\n    <main className=\"min-h-screen bg-black text-white flex flex-col items-center justify-center\">\n      <h1 className=\"text-6xl font-bold mb-6\">\n        Pharma Stock SaaS\n      </h1>\n\n      <p className=\"text-gray-400 text-xl mb-8\">\n        AI-powered pharma inventory platform\n      </p>\n\n      <button className=\"bg-white text-black px-6 py-3 rounded-xl font-semibold hover:scale-105 transition\">\n        Get Started\n      </button>\n    </main>\n  );\n}"],"names":["Home","className"],"mappings":";;;;;;AAAe,SAASA;IACtB,qBACE,8OAAC;QAAKC,WAAU;;0BACd,8OAAC;gBAAGA,WAAU;0BAA0B;;;;;;0BAIxC,8OAAC;gBAAEA,WAAU;0BAA6B;;;;;;0BAI1C,8OAAC;gBAAOA,WAAU;0BAAoF;;;;;;;;;;;;AAK5G"}}]
+}
