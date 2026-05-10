@@ -1,20 +1,22 @@
 export default function InventoryTable() {
   return (
-    <div className="overflow-hidden rounded-3xl border">
+    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-4 text-left">Medicine</th>
-            <th className="p-4 text-left">Stock</th>
-            <th className="p-4 text-left">Expiry</th>
+        <thead>
+          <tr className="text-left border-b">
+            <th className="pb-4">Drug</th>
+            <th className="pb-4">Batch</th>
+            <th className="pb-4">Expiry</th>
+            <th className="pb-4">Stock</th>
           </tr>
         </thead>
 
         <tbody>
           <tr>
-            <td className="p-4">Paracetamol</td>
-            <td className="p-4">320</td>
-            <td className="p-4">12/2026</td>
+            <td className="py-5">Paracetamol</td>
+            <td>B12345</td>
+            <td>2026-02-28</td>
+            <td>5000</td>
           </tr>
         </tbody>
       </table>

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
+
 export const metadata: Metadata = {
   title: 'PharmaStock',
-  description: 'Premium Pharmaceutical Inventory SaaS',
+  description: 'AI Powered Pharmaceutical Warehouse Management Platform',
 };
 
 export default function RootLayout({
@@ -12,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
