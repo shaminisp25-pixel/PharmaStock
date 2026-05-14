@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  pharmacist
+  warehouse_staff
+  inspector
+}
+
+enum BatchStatus {
+  active
+  dispatched
+  expired
+  quarantined
+}
+
+enum AlertType {
+  near_expiry
+  expired
+  low_stock
+  temp_breach
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          Role
+  warehouseId   String?   @map("warehouse_id")
+  warehouse     Warehouse? @relation(fields: [warehouseId], references: [id])
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  importLogs    ImportLog[]
+  dispatches    DispatchRecord[]
+  auditLogs     AuditLog[]
+  importedBatches Batch[] @relation("ImportedBy")
+
+  @@index([email])
+  @@map("users")
+}
+
+model Warehouse {
+  id        String   @id @default(uuid())
+  name      String
+  location  String
+  tempMin   Float    @map("temp_min")
+  tempMax   Float    @map("temp_max")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users     User[]
+  batches   Batch[]
+
+  @@map("warehouses")
+}
+
+model Drug {
+  id           String   @id @default(uuid())
+  name         String
+  composition  String?
+  manufacturer String
+  category     String?
+  tempMin      Float    @map("temp_min")
+  tempMax      Float    @map("temp_max")
+  storageNotes String?  @map("storage_notes")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  batches      Batch[]
+
+  @@index([name])
+  @@index([manufacturer])
+  @@map("drugs")
+}
+
+model Batch {
+  id           String      @id @default(uuid())
+  drugId       String      @map("drug_id")
+  drug         Drug        @relation(fields: [drugId], references: [id], onDelete: Cascade)
+  batchNo      String      @unique @map("batch_no")
+  expiryDate   DateTime    @map("expiry_date")
+  quantity     Int
+  warehouseId  String      @map("warehouse_id")
+  warehouse    Warehouse   @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  status       BatchStatus @default(active)
+  importedById String?     @map("imported_by_id")
+  importedBy   User?       @relation("ImportedBy", fields: [importedById], references: [id])
+  importedAt   DateTime    @default(now()) @map("imported_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  dispatches   DispatchRecord[]
+  alerts       Alert[]
+
+  @@index([expiryDate])
+  @@index([status])
+  @@index([warehouseId])
+  @@map("batches")
+}
+
+model DispatchRecord {
+  id                 String   @id @default(uuid())
+  batchId            String   @map("batch_id")
+  batch              Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  quantityDispatched Int      @map("quantity_dispatched")
+  destination        String
+  prescriptionRef    String?  @map("prescription_ref")
+  dispatchedById     String   @map("dispatched_by_id")
+  dispatchedBy       User     @relation(fields: [dispatchedById], references: [id])
+  dispatchedAt       DateTime @default(now()) @map("dispatched_at")
+
+  @@index([batchId])
+  @@index([dispatchedAt])
+  @@map("dispatch_records")
+}
+
+model ImportLog {
+  id           String   @id @default(uuid())
+  filename     String
+  totalRows    Int      @map("total_rows")
+  successRows  Int      @map("success_rows")
+  failedRows   Int      @map("failed_rows")
+  errors       Json     @default("[]")
+  uploadedById String   @map("uploaded_by_id")
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  uploadedAt   DateTime @default(now()) @map("uploaded_at")
+
+  @@index([uploadedAt])
+  @@map("import_logs")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  beforeState Json?    @map("before_state")
+  afterState  Json?    @map("after_state")
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+model Alert {
+  id          String    @id @default(uuid())
+  batchId     String    @map("batch_id")
+  batch       Batch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  alertType   AlertType @map("alert_type")
+  resolved    Boolean   @default(false)
+  resolvedAt  DateTime? @map("resolved_at")
+  triggeredAt DateTime  @default(now()) @map("triggered_at")
+
+  @@index([resolved])
+  @@index([batchId])
+  @@map("alerts")
+}
