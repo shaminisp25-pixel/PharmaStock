@@ -9,17 +9,19 @@ A fully-functional pharmaceutical warehouse management system backend built with
 ## 📦 What Was Built
 
 ### Core Architecture
+
 ✅ **TypeScript** with strict mode enabled  
 ✅ **Express.js 4.x** REST API framework  
 ✅ **Prisma ORM** with 8 data models  
 ✅ **PostgreSQL 15+** database with migrations  
 ✅ **Redis 7+** for session & token storage  
 ✅ **Winston** logging with file persistence  
-✅ **Docker Compose** for full local dev environment  
+✅ **Docker Compose** for full local dev environment
 
 ### API Endpoints: 40+ Implemented
 
 #### Authentication (5 endpoints)
+
 - `POST /auth/register` - User registration
 - `POST /auth/login` - User login with JWT
 - `POST /auth/refresh` - Refresh access token
@@ -27,6 +29,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - `PATCH /auth/change-password` - Change password
 
 #### Users (5 endpoints) - Admin only
+
 - `GET /users` - List users with pagination
 - `GET /users/:id` - Get user details
 - `POST /users` - Create user
@@ -34,6 +37,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - `DELETE /users/:id` - Soft delete user
 
 #### Warehouses (5 endpoints)
+
 - `GET /warehouses` - List warehouses
 - `GET /warehouses/:id` - Get warehouse
 - `POST /warehouses` - Create (admin)
@@ -41,6 +45,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - `DELETE /warehouses/:id` - Delete (admin)
 
 #### Drugs (5 endpoints)
+
 - `GET /drugs` - List drugs with search
 - `GET /drugs/:id` - Get drug details
 - `POST /drugs` - Create (admin/pharmacist)
@@ -48,6 +53,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - `DELETE /drugs/:id` - Delete (admin)
 
 #### Batches (7 endpoints)
+
 - `GET /batches` - List with filters
 - `GET /batches/:id` - Get batch
 - `POST /batches` - Create (admin/warehouse_staff)
@@ -57,26 +63,31 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - `DELETE /batches/:id` - Delete (admin)
 
 #### Alerts (3 endpoints)
+
 - `GET /alerts` - List alerts
 - `GET /alerts/:id` - Get alert
 - `PATCH /alerts/:id/resolve` - Resolve alert
 
 #### Audit Logs (1 endpoint)
+
 - `GET /audit` - View audit logs (admin/inspector)
 
 #### Import/Export (4 endpoints)
+
 - `POST /import/drugs/upload` - Upload CSV/XLSX
 - `GET /import/logs` - Import history
 - `GET /import/logs/:id` - Import details
 - `GET /import/template` - Download template
 
 #### Reports (4 endpoints)
+
 - `GET /reports/expiry` - Expiry report
 - `GET /reports/dispatch` - Dispatch report
 - `GET /reports/stock` - Stock report
 - `GET /reports/temperature-sensitive` - Temp report
 
 #### Integration (2 endpoints)
+
 - `POST /integration/erp/sync` - ERP webhook
 - `POST /integration/prescription/lookup` - Prescription lookup
 
@@ -85,20 +96,23 @@ A fully-functional pharmaceutical warehouse management system backend built with
 ## 🔐 Security Implementation
 
 ### Authentication & Authorization
+
 ✅ **JWT Authentication** with short-lived access tokens (15 min)  
 ✅ **Refresh Token Rotation** with Redis storage (7 days)  
 ✅ **Role-Based Access Control** with 4 roles  
 ✅ **25+ Permission Guards** enforcing granular access  
 ✅ **Bcrypt Password Hashing** with 12 rounds  
-✅ **API Key Authentication** for webhook integrations  
+✅ **API Key Authentication** for webhook integrations
 
 ### RBAC Roles & Permissions
+
 - **Admin**: Full system access + user management
 - **Pharmacist**: Create/update drugs, dispatch batches, resolve alerts
 - **Warehouse Staff**: Import drugs, manage batches in assigned warehouse
 - **Inspector**: Read-only access to all data + audit logs
 
 ### Security Headers & Middleware
+
 ✅ **Helmet.js** for HTTP security headers  
 ✅ **CORS** with configurable origin whitelist  
 ✅ **Rate Limiting**: Global (100/15min) + Auth (10/15min) + Import (20/hour)  
@@ -106,32 +120,36 @@ A fully-functional pharmaceutical warehouse management system backend built with
 ✅ **SQL Injection Prevention** via Prisma  
 ✅ **HTTPS/TLS** ready (HSTS header enabled)  
 ✅ **Compression** middleware for responses  
-✅ **Trust Proxy** configuration for load balancers  
+✅ **Trust Proxy** configuration for load balancers
 
 ### Audit & Compliance
+
 ✅ **Audit Trail Middleware** logs all mutations  
 ✅ **Before/After State Tracking** for updates  
 ✅ **User & IP Logging** for compliance  
 ✅ **User-Agent Tracking** for security  
-✅ **Immutable Audit Logs** for compliance  
+✅ **Immutable Audit Logs** for compliance
 
 ---
 
 ## 📊 Data Models (Prisma Schema)
 
 ### Users
+
 - Id, Name, Email (unique), Password Hash
 - Role: admin | pharmacist | warehouse_staff | inspector
 - Warehouse Assignment
 - Active Status, Timestamps
 
 ### Warehouses
+
 - Id, Name, Location
 - Temperature Range (Min/Max)
 - Relationships: Users, Batches
 - Timestamps
 
 ### Drugs
+
 - Id, Name, Manufacturer
 - Composition, Category
 - Temperature Requirements
@@ -140,6 +158,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - Timestamps
 
 ### Batches
+
 - Id, Batch Number (unique)
 - Drug & Warehouse References
 - Expiry Date (indexed)
@@ -149,6 +168,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - Timestamps
 
 ### Dispatch Records
+
 - Id, Batch & User References
 - Quantity Dispatched
 - Destination, Prescription Reference
@@ -156,6 +176,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - Timestamps
 
 ### Alerts
+
 - Id, Batch Reference
 - Type: near_expiry|expired|low_stock|temp_breach
 - Resolution Status & Timestamp
@@ -163,6 +184,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - Relationships: Batch
 
 ### Audit Logs
+
 - Id, User Reference
 - Action (POST/PATCH/DELETE)
 - Entity Type & Entity ID
@@ -171,6 +193,7 @@ A fully-functional pharmaceutical warehouse management system backend built with
 - Created At
 
 ### Import Logs
+
 - Id, Filename
 - Total/Success/Failed Row Counts
 - Error Details (JSON)
@@ -230,29 +253,29 @@ backend/src/
 
 ## 🗄️ Configuration Files
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `tsconfig.json` | TypeScript strict config | ✅ |
-| `package.json` | 30+ dependencies, scripts | ✅ |
-| `.env` | 20+ environment variables | ✅ |
-| `.env.example` | Template for developers | ✅ |
-| `prisma/schema.prisma` | 8 data models + migrations | ✅ |
-| `docker-compose.yml` | PostgreSQL, Redis, API | ✅ |
-| `Dockerfile` | Production image | ✅ |
-| `.eslintrc.json` | Linting rules | ✅ |
-| `.prettierrc` | Code formatting | ✅ |
-| `.gitignore` | Git ignore patterns | ✅ |
+| File                   | Purpose                    | Status |
+| ---------------------- | -------------------------- | ------ |
+| `tsconfig.json`        | TypeScript strict config   | ✅     |
+| `package.json`         | 30+ dependencies, scripts  | ✅     |
+| `.env`                 | 20+ environment variables  | ✅     |
+| `.env.example`         | Template for developers    | ✅     |
+| `prisma/schema.prisma` | 8 data models + migrations | ✅     |
+| `docker-compose.yml`   | PostgreSQL, Redis, API     | ✅     |
+| `Dockerfile`           | Production image           | ✅     |
+| `.eslintrc.json`       | Linting rules              | ✅     |
+| `.prettierrc`          | Code formatting            | ✅     |
+| `.gitignore`           | Git ignore patterns        | ✅     |
 
 ---
 
 ## 📚 Documentation
 
-| Document | Content |
-|----------|---------|
-| `README.md` | Full project documentation |
-| `SETUP_GUIDE.md` | Step-by-step setup instructions |
-| `API_TESTING.md` | Complete curl examples for all endpoints |
-| `DEPLOYMENT_CHECKLIST.md` | Production deployment verification |
+| Document                  | Content                                  |
+| ------------------------- | ---------------------------------------- |
+| `README.md`               | Full project documentation               |
+| `SETUP_GUIDE.md`          | Step-by-step setup instructions          |
+| `API_TESTING.md`          | Complete curl examples for all endpoints |
+| `DEPLOYMENT_CHECKLIST.md` | Production deployment verification       |
 
 ---
 
@@ -286,6 +309,7 @@ docker-compose up --build
 ## 🔧 Key Features
 
 ### ✅ Implemented
+
 - JWT authentication with refresh token rotation
 - 4-tier RBAC with 25+ permission guards
 - Standardized API response format
@@ -303,6 +327,7 @@ docker-compose up --build
 - Graceful shutdown handling
 
 ### 🎯 Production-Ready
+
 - Error handling with no stack leaks
 - Environment validation at startup
 - Database connection pooling ready
@@ -317,6 +342,7 @@ docker-compose up --build
 ## 📋 What's Next
 
 ### Immediate Setup
+
 1. `npm install` — Install 30+ dependencies
 2. Create PostgreSQL database (pharma_db)
 3. Start Redis server (localhost:6379)
@@ -324,6 +350,7 @@ docker-compose up --build
 5. `npm run dev` — Start dev server
 
 ### Testing
+
 1. Register a user: `POST /auth/register`
 2. Login: `POST /auth/login`
 3. Create warehouse: `POST /warehouses`
@@ -333,6 +360,7 @@ docker-compose up --build
 7. View alerts: `GET /alerts`
 
 ### Deployment
+
 1. Configure production `.env`
 2. Deploy with Docker: `docker-compose -f production-compose.yml up`
 3. Run migrations: `npx prisma migrate deploy`
@@ -344,27 +372,28 @@ docker-compose up --build
 
 ## 📊 Stats
 
-| Metric | Count |
-|--------|-------|
-| API Endpoints | 40+ |
-| Prisma Models | 8 |
-| Database Tables | 9 |
-| Middleware | 8 |
-| Controllers | 4 |
-| Services | 7 |
-| Route Files | 10 |
-| RBAC Permissions | 25+ |
-| Zod Schemas | 15+ |
-| Dependencies | 30+ |
-| Dev Dependencies | 8 |
-| Security Layers | 7 |
-| Lines of Code | 3000+ |
+| Metric           | Count |
+| ---------------- | ----- |
+| API Endpoints    | 40+   |
+| Prisma Models    | 8     |
+| Database Tables  | 9     |
+| Middleware       | 8     |
+| Controllers      | 4     |
+| Services         | 7     |
+| Route Files      | 10    |
+| RBAC Permissions | 25+   |
+| Zod Schemas      | 15+   |
+| Dependencies     | 30+   |
+| Dev Dependencies | 8     |
+| Security Layers  | 7     |
+| Lines of Code    | 3000+ |
 
 ---
 
 ## 🎓 Architecture Highlights
 
 ### Layered Architecture
+
 ```
 Routes → Controllers → Services → Database
   ↑          ↓
@@ -374,6 +403,7 @@ Utilities (Logger, ApiResponse, ApiError)
 ```
 
 ### Security Depth (7 Layers)
+
 1. **Helmet** — Security headers
 2. **CORS** — Origin validation
 3. **Rate Limiting** — DoS protection
@@ -383,6 +413,7 @@ Utilities (Logger, ApiResponse, ApiError)
 7. **Error Handler** — No stack leaks
 
 ### Data Protection
+
 - Bcrypt for passwords (12 rounds)
 - Refresh tokens in Redis (not cookies)
 - Access tokens short-lived (15 min)
@@ -401,7 +432,7 @@ Utilities (Logger, ApiResponse, ApiError)
 📚 **Well Documented** — 4 detailed guides + 40+ curl examples  
 🧪 **Testable** — Clear separation of concerns  
 📈 **Scalable** — Stateless design, ready for load balancing  
-🛡️ **Compliant** — RBAC, audit trails, role-based scoping  
+🛡️ **Compliant** — RBAC, audit trails, role-based scoping
 
 ---
 
@@ -452,14 +483,17 @@ A complete **Swagger/OpenAPI 3.0** documentation system with interactive API tes
 ### 🛠️ Implementation Details
 
 **Files Added:**
+
 - `src/config/swagger.ts` — OpenAPI specification generator
 - `SWAGGER_GUIDE.md` — User guide for API documentation
 
 **Files Modified:**
+
 - `src/app.ts` — Added Swagger UI middleware and `/api-docs` route
 - All route files — Added comprehensive JSDoc comments
 
 **Dependencies:**
+
 - `swagger-ui-express` — Interactive documentation UI
 - `swagger-jsdoc` — Converts JSDoc to OpenAPI spec
 
@@ -475,23 +509,24 @@ http://localhost:5000/api-docs
 
 ### 📋 Documented Endpoints
 
-| Category | Count | Endpoints |
-|----------|-------|-----------|
-| Authentication | 5 | Register, Login, Refresh, Logout, Change Password |
-| Users | 5 | CRUD operations |
-| Warehouses | 5 | CRUD operations |
-| Drugs | 5 | CRUD operations |
-| Batches | 7 | CRUD + Status + Dispatch + Scan |
-| Alerts | 3 | List, Get, Resolve |
-| Audit | 1 | Get audit logs |
-| Import | 4 | Logs, Template, Upload |
-| Reports | 4 | Expiry, Dispatch, Stock, Temperature |
-| Integration | 2 | ERP Sync, Prescription Lookup |
-| **TOTAL** | **41** | **All endpoints documented** |
+| Category       | Count  | Endpoints                                         |
+| -------------- | ------ | ------------------------------------------------- |
+| Authentication | 5      | Register, Login, Refresh, Logout, Change Password |
+| Users          | 5      | CRUD operations                                   |
+| Warehouses     | 5      | CRUD operations                                   |
+| Drugs          | 5      | CRUD operations                                   |
+| Batches        | 7      | CRUD + Status + Dispatch + Scan                   |
+| Alerts         | 3      | List, Get, Resolve                                |
+| Audit          | 1      | Get audit logs                                    |
+| Import         | 4      | Logs, Template, Upload                            |
+| Reports        | 4      | Expiry, Dispatch, Stock, Temperature              |
+| Integration    | 2      | ERP Sync, Prescription Lookup                     |
+| **TOTAL**      | **41** | **All endpoints documented**                      |
 
 ### 🔐 Security Documentation
 
 All endpoints include:
+
 - ✅ Required authentication method
 - ✅ Permission requirements (RBAC)
 - ✅ Rate limiting info
@@ -516,21 +551,21 @@ All endpoints include:
 
 ## 🎯 Complete Feature Set
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| REST API | ✅ | 40+ endpoints |
-| Swagger UI | ✅ | Interactive documentation |
-| JWT Auth | ✅ | 15 min tokens + refresh |
-| RBAC | ✅ | 4 roles, 25+ permissions |
-| Audit Trail | ✅ | All mutations tracked |
-| Rate Limiting | ✅ | Global + tier-based |
-| Input Validation | ✅ | Zod schemas |
-| Error Handling | ✅ | Comprehensive + secure |
-| Logging | ✅ | Winston with file storage |
-| Docker | ✅ | Docker Compose included |
-| Database | ✅ | Prisma + PostgreSQL |
-| Caching | ✅ | Redis integration |
-| Security | ✅ | Helmet, CORS, etc. |
-| Documentation | ✅ | Swagger + 4 guides |
+| Feature          | Status | Notes                     |
+| ---------------- | ------ | ------------------------- |
+| REST API         | ✅     | 40+ endpoints             |
+| Swagger UI       | ✅     | Interactive documentation |
+| JWT Auth         | ✅     | 15 min tokens + refresh   |
+| RBAC             | ✅     | 4 roles, 25+ permissions  |
+| Audit Trail      | ✅     | All mutations tracked     |
+| Rate Limiting    | ✅     | Global + tier-based       |
+| Input Validation | ✅     | Zod schemas               |
+| Error Handling   | ✅     | Comprehensive + secure    |
+| Logging          | ✅     | Winston with file storage |
+| Docker           | ✅     | Docker Compose included   |
+| Database         | ✅     | Prisma + PostgreSQL       |
+| Caching          | ✅     | Redis integration         |
+| Security         | ✅     | Helmet, CORS, etc.        |
+| Documentation    | ✅     | Swagger + 4 guides        |
 
 ---

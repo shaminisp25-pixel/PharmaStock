@@ -7,6 +7,7 @@
 ## Step 1: Clean Installation
 
 ### 1a. Remove Previous Installation
+
 ```bash
 cd /Users/shamini/Projects/Designpharmastocksaashomepage/backend
 
@@ -18,6 +19,7 @@ npm cache clean --force
 ```
 
 ### 1b. Fresh Install
+
 ```bash
 npm install
 ```
@@ -27,17 +29,20 @@ npm install
 ## Step 2: Verify Environment Variables
 
 ### Check `.env` file
+
 ```bash
 cat .env | grep -E "PORT|API_PREFIX"
 ```
 
 **Expected output:**
+
 ```
 PORT=5000
 API_PREFIX=/api/v1
 ```
 
 If missing, add to `.env`:
+
 ```env
 PORT=5000
 API_PREFIX=/api/v1
@@ -127,11 +132,14 @@ export function createApp(): Application {
 
   // Swagger Setup (BEFORE routes)
   app.use('/api-docs', swaggerUi.serve);
-  app.get('/api-docs', swaggerUi.setup(specs, {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  }));
+  app.get(
+    '/api-docs',
+    swaggerUi.setup(specs, {
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    })
+  );
 
   // API Routes
   app.use('/api/v1', routes);
@@ -182,6 +190,7 @@ export default router;
 ```
 
 **Key Points:**
+
 - ✅ Must start with `/**` (JSDoc comment)
 - ✅ Must start with `* @swagger`
 - ✅ Path must match the route (e.g., `/auth/login`)
@@ -204,6 +213,7 @@ npm run dev
 ```
 
 **Expected terminal output:**
+
 ```
 listening on port 5000
 ```
@@ -213,11 +223,13 @@ listening on port 5000
 ## Step 8: Access Swagger
 
 Open in browser:
+
 ```
 http://localhost:5000/api-docs
 ```
 
 You should see the Swagger UI with:
+
 - ✅ PharmaStock API title
 - ✅ All endpoints listed
 - ✅ Try it out button available
@@ -229,6 +241,7 @@ You should see the Swagger UI with:
 ### Issue: Swagger UI Shows But No Endpoints
 
 **Solution:**
+
 1. Check `src/routes/*.ts` files have JSDoc comments
 2. Verify JSDoc format is correct (starts with `/**` and `* @swagger`)
 3. Ensure path matches route definition
@@ -237,6 +250,7 @@ You should see the Swagger UI with:
 ### Issue: Can't Connect to http://localhost:5000/api-docs
 
 **Solution:**
+
 ```bash
 # Check if port 5000 is in use
 lsof -i :5000
@@ -251,6 +265,7 @@ npm run dev
 ### Issue: "Cannot find module 'swagger-jsdoc'"
 
 **Solution:**
+
 ```bash
 # Reinstall packages
 rm -rf node_modules package-lock.json
@@ -263,6 +278,7 @@ npm run build
 ### Issue: TypeScript Error in swagger.ts
 
 **Solution:**
+
 ```bash
 # Install missing types
 npm install --save-dev @types/swagger-ui-express @types/swagger-jsdoc
@@ -298,7 +314,7 @@ npm run build
 - [ ] swagger-jsdoc installed
 - [ ] src/config/swagger.ts exists
 - [ ] src/app.ts has swagger middleware
-- [ ] src/routes/*.ts have JSDoc comments
+- [ ] src/routes/\*.ts have JSDoc comments
 - [ ] npm run build succeeds with no errors
 - [ ] npm run dev starts without errors
 - [ ] http://localhost:5000/api-docs is accessible
@@ -340,6 +356,7 @@ http://localhost:5000/api-docs
 ```
 
 The URL consists of:
+
 - `http://localhost:5000` - Server + Port
 - `/api-docs` - Swagger UI endpoint
 
@@ -348,6 +365,7 @@ The URL consists of:
 ## Common Mistakes to Avoid
 
 ❌ **DON'T:**
+
 - Use path `/auth/login` but route at `/login`
 - Forget `* @swagger` in JSDoc
 - Forget `responses:` in documentation
@@ -355,6 +373,7 @@ The URL consists of:
 - Use wrong case for HTTP methods
 
 ✅ **DO:**
+
 - Match documentation path with route path
 - Start JSDoc with `/**` and `* @swagger`
 - Include proper responses object
@@ -402,6 +421,7 @@ curl -s http://localhost:5000/api-docs | head -20
 4. ✅ Generate API documentation
 
 If still not working, run:
+
 ```bash
 npm run build 2>&1 | grep -i error
 ```
@@ -411,6 +431,7 @@ And share the output for debugging.
 ---
 
 **Need Help?** Check:
+
 - `npm run build` output for compilation errors
 - Terminal output from `npm run dev`
 - Console error in browser (F12)

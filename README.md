@@ -28,32 +28,38 @@ PharmaStock is a **complete pharmaceutical warehouse management system** built w
 ## ✨ Features
 
 ### Dashboard & Analytics
+
 - Real-time statistics (expiry alerts, total drugs, stock overview)
 - Activity timeline and recent events
 - At-a-glance inventory status
 
 ### Inventory Management
+
 - **Drugs**: Complete drug catalog with manufacturer info
 - **Batches**: Inventory tracking with expiry dates and temperature
 - **Alerts**: Automated alerts for expiry, stock, temperature, dispatch, import
 
 ### Administration
+
 - **User Management**: Role-based access control (4 roles: Admin, Manager, Warehouse Staff, Viewer)
 - **Audit Logs**: Complete audit trail of all system activities
 - **Warehouse Management**: Multi-warehouse support with scoped access
 
 ### Reporting
+
 - **Expiry Reports**: Track expiring drugs
 - **Stock Reports**: Current inventory levels
 - **Dispatch Reports**: Shipment tracking
 - **Export Capabilities**: PDF and CSV exports
 
 ### Data Management
+
 - **Import/Export**: Bulk data import with validation
 - **Search & Filter**: Advanced filtering across all modules
 - **Pagination**: Efficient data loading
 
 ### Security
+
 - JWT-based authentication with refresh tokens
 - Role-based access control (RBAC)
 - HttpOnly secure cookies
@@ -66,6 +72,7 @@ PharmaStock is a **complete pharmaceutical warehouse management system** built w
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL 15+
 - Redis 7+ (optional, for caching)
@@ -192,17 +199,17 @@ For detailed architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ### Available Services
 
-| Service | Endpoints | Features |
-|---------|-----------|----------|
-| **Auth** | 5 | Login, Register, Refresh, Logout, Change Password |
-| **Drugs** | 6 | CRUD, Search, Pagination |
-| **Batches** | 8 | CRUD, Dispatch, Scan, Statistics |
-| **Alerts** | 4 | Get, Resolve, Statistics |
-| **Users** | 8 | CRUD, Role Assignment, Warehouse Assignment |
-| **Reports** | 4 | Generate, Export (PDF/CSV) |
-| **Import** | 2 | Upload, Validate |
-| **Audit** | 2 | Query, Export |
-| **Warehouse** | 5 | CRUD |
+| Service       | Endpoints | Features                                          |
+| ------------- | --------- | ------------------------------------------------- |
+| **Auth**      | 5         | Login, Register, Refresh, Logout, Change Password |
+| **Drugs**     | 6         | CRUD, Search, Pagination                          |
+| **Batches**   | 8         | CRUD, Dispatch, Scan, Statistics                  |
+| **Alerts**    | 4         | Get, Resolve, Statistics                          |
+| **Users**     | 8         | CRUD, Role Assignment, Warehouse Assignment       |
+| **Reports**   | 4         | Generate, Export (PDF/CSV)                        |
+| **Import**    | 2         | Upload, Validate                                  |
+| **Audit**     | 2         | Query, Export                                     |
+| **Warehouse** | 5         | CRUD                                              |
 
 ### Access API Documentation
 
@@ -245,15 +252,18 @@ Swagger UI provides interactive API testing
 ## 📖 Documentation
 
 ### Getting Started
+
 - [QUICK_START.md](./QUICK_START.md) - 15-minute setup guide
 - [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) - Code examples and patterns
 
 ### Understanding the System
+
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - System architecture and data flows
 - [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) - Comprehensive integration guide
 - [INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md) - Feature overview
 
 ### Verification & Deployment
+
 - [INTEGRATION_CHECKLIST.md](./INTEGRATION_CHECKLIST.md) - Setup verification
 - Backend docs: `backend/IMPLEMENTATION_SUMMARY.md`
 - Backend setup: `backend/SETUP_GUIDE.md`
@@ -263,6 +273,7 @@ Swagger UI provides interactive API testing
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14+ with App Router
 - **Language**: TypeScript 5+
 - **UI**: React 18+ with Tailwind CSS
@@ -271,6 +282,7 @@ Swagger UI provides interactive API testing
 - **Type Safety**: TypeScript + Zod
 
 ### Backend
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 4+
 - **Language**: TypeScript 5+
@@ -283,6 +295,7 @@ Swagger UI provides interactive API testing
 - **Security**: Helmet + CORS
 
 ### DevOps
+
 - **Containerization**: Docker
 - **Orchestration**: Docker Compose / Kubernetes
 - **Database**: AWS RDS / Cloud SQL
@@ -296,12 +309,14 @@ Swagger UI provides interactive API testing
 ### Target Metrics
 
 **Frontend**
+
 - First Contentful Paint: < 1.5s
 - Largest Contentful Paint: < 2.5s
 - Time to Interactive: < 3.5s
 - Bundle Size: < 200KB (gzipped)
 
 **Backend**
+
 - API Response Time: < 200ms (p95)
 - Database Query Time: < 100ms (p95)
 - Throughput: > 1000 requests/sec
@@ -516,6 +531,6 @@ See [INTEGRATION_CHECKLIST.md](./INTEGRATION_CHECKLIST.md) for detailed verifica
 
 **Built with ❤️ for pharmaceutical warehouse management**
 
-*Production-Ready • Enterprise Security • Modern Stack*
+_Production-Ready • Enterprise Security • Modern Stack_
 
 </div>

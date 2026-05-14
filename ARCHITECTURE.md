@@ -747,6 +747,7 @@ Is retryable? (408, 429, 5xx)
 ## Technology Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript 5+
 - **UI Framework**: React 18+
@@ -756,6 +757,7 @@ Is retryable? (408, 429, 5xx)
 - **Type Safety**: TypeScript interfaces + Zod validation
 
 ### Backend
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 4+
 - **Language**: TypeScript 5+
@@ -769,6 +771,7 @@ Is retryable? (408, 429, 5xx)
 - **API Documentation**: Swagger/OpenAPI 3.0
 
 ### Deployment
+
 - **Frontend**: Vercel / Netlify / AWS S3 + CloudFront
 - **Backend**: Docker + Kubernetes / AWS ECS / Railway
 - **Database**: AWS RDS PostgreSQL / Cloud SQL

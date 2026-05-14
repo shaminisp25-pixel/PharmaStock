@@ -3,6 +3,7 @@
 ## 🚀 Getting Started (2 steps)
 
 ### Step 1: Start the Backend
+
 ```bash
 cd backend
 npm install  # If not done already
@@ -10,12 +11,14 @@ npm run dev
 ```
 
 ### Step 2: Open Documentation
+
 - **URL**: http://localhost:5000/api-docs
 - **Root Redirect**: http://localhost:5000/ (automatically redirects to /api-docs)
 
 ---
 
 ## 📍 API Base URL
+
 - **Development**: `http://localhost:5000/api/v1`
 - **Production**: `https://api.pharmastock.com/api/v1`
 
@@ -46,6 +49,7 @@ npm run dev
 ## 📚 API Endpoints by Category
 
 ### 🔐 Authentication (`/auth`)
+
 ```
 POST   /auth/register              Register new user
 POST   /auth/login                 User login
@@ -55,6 +59,7 @@ PATCH  /auth/change-password       Change password (requires auth)
 ```
 
 ### 👤 Users (`/users`) — Admin only
+
 ```
 GET    /users                      List users (paginated)
 GET    /users/{id}                 Get user details
@@ -64,6 +69,7 @@ DELETE /users/{id}                 Delete user
 ```
 
 ### 🏭 Warehouses (`/warehouses`)
+
 ```
 GET    /warehouses                 List warehouses
 GET    /warehouses/{id}            Get warehouse
@@ -73,6 +79,7 @@ DELETE /warehouses/{id}            Delete warehouse
 ```
 
 ### 💊 Drugs (`/drugs`)
+
 ```
 GET    /drugs                      List drugs
 GET    /drugs/{id}                 Get drug details
@@ -82,6 +89,7 @@ DELETE /drugs/{id}                 Delete drug
 ```
 
 ### 📦 Batches (`/batches`)
+
 ```
 GET    /batches                    List batches
 GET    /batches/{id}               Get batch details
@@ -93,6 +101,7 @@ DELETE /batches/{id}               Delete batch
 ```
 
 ### ⚠️ Alerts (`/alerts`)
+
 ```
 GET    /alerts                     List alerts
 GET    /alerts/{id}                Get alert details
@@ -100,11 +109,13 @@ PATCH  /alerts/{id}/resolve        Resolve alert
 ```
 
 ### 📋 Audit (`/audit`)
+
 ```
 GET    /audit                      Get audit logs
 ```
 
 ### 📥 Import (`/import`)
+
 ```
 GET    /import/logs                Get import logs
 GET    /import/logs/{id}           Get import log details
@@ -113,6 +124,7 @@ POST   /import/drugs/upload        Upload drugs from CSV
 ```
 
 ### 📊 Reports (`/reports`)
+
 ```
 GET    /reports/expiry             Expiry report
 GET    /reports/dispatch           Dispatch report
@@ -121,6 +133,7 @@ GET    /reports/temperature-sensitive  Temperature report
 ```
 
 ### 🔗 Integration (`/integration`)
+
 ```
 POST   /integration/erp/sync       Sync with ERP system
 POST   /integration/prescription/lookup  Lookup prescription
@@ -131,6 +144,7 @@ POST   /integration/prescription/lookup  Lookup prescription
 ## 🧪 Testing Examples
 
 ### 1. Register a User
+
 ```json
 POST /auth/register
 {
@@ -142,6 +156,7 @@ POST /auth/register
 ```
 
 ### 2. Login
+
 ```json
 POST /auth/login
 {
@@ -151,6 +166,7 @@ POST /auth/login
 ```
 
 ### 3. Create Warehouse
+
 ```json
 POST /warehouses
 Authorization: Bearer {token}
@@ -162,6 +178,7 @@ Authorization: Bearer {token}
 ```
 
 ### 4. Create Drug
+
 ```json
 POST /drugs
 Authorization: Bearer {token}
@@ -174,6 +191,7 @@ Authorization: Bearer {token}
 ```
 
 ### 5. Create Batch
+
 ```json
 POST /batches
 Authorization: Bearer {token}
@@ -194,6 +212,7 @@ Authorization: Bearer {token}
 ## 📊 Response Format
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -207,6 +226,7 @@ Authorization: Bearer {token}
 ```
 
 ### List Response (Paginated)
+
 ```json
 {
   "success": true,
@@ -226,6 +246,7 @@ Authorization: Bearer {token}
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -254,21 +275,25 @@ Authorization: Bearer {token}
 ## 🔐 Roles & Permissions
 
 ### ADMIN
+
 - Full access to all endpoints
 - User management
 - System configuration
 
 ### MANAGER
+
 - Manage warehouses, drugs, batches
 - Create and update users
 - View reports
 
 ### WAREHOUSE_STAFF
+
 - Create and manage batches
 - Import drugs
 - View inventory
 
 ### VIEWER
+
 - Read-only access
 - View all data
 - Generate reports
@@ -301,23 +326,24 @@ Authorization: Bearer {token}
 
 ## ✅ HTTP Status Codes
 
-| Code | Meaning |
-|------|---------|
-| 200 | OK - Success |
-| 201 | Created - Resource created |
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Auth required |
-| 403 | Forbidden - No permission |
-| 404 | Not Found - Resource doesn't exist |
-| 409 | Conflict - Resource already exists |
-| 429 | Too Many Requests - Rate limit exceeded |
-| 500 | Server Error - Internal error |
+| Code | Meaning                                 |
+| ---- | --------------------------------------- |
+| 200  | OK - Success                            |
+| 201  | Created - Resource created              |
+| 400  | Bad Request - Invalid input             |
+| 401  | Unauthorized - Auth required            |
+| 403  | Forbidden - No permission               |
+| 404  | Not Found - Resource doesn't exist      |
+| 409  | Conflict - Resource already exists      |
+| 429  | Too Many Requests - Rate limit exceeded |
+| 500  | Server Error - Internal error           |
 
 ---
 
 ## 🐛 Troubleshooting
 
 ### Can't Access /api-docs
+
 ```bash
 # Check if backend is running
 lsof -i :5000
@@ -327,15 +353,18 @@ npm run dev
 ```
 
 ### Authentication Not Working
+
 - Ensure token format: `Bearer {token}`
 - Check token hasn't expired
 - Try `/auth/refresh` to get new token
 
 ### Rate Limited
+
 - Wait 15 minutes (or 1 hour for import)
 - Reduce request frequency
 
 ### Invalid Request
+
 - Check parameter types
 - Verify required fields
 - See error message in response
@@ -344,14 +373,14 @@ npm run dev
 
 ## 📖 Documentation Files
 
-| File | Purpose |
-|------|---------|
-| `SWAGGER_GUIDE.md` | Comprehensive user guide |
-| `API_TESTING.md` | 40+ curl examples |
-| `SETUP_GUIDE.md` | Setup instructions |
-| `README.md` | General documentation |
-| `DEPLOYMENT_CHECKLIST.md` | Production deployment |
-| `IMPLEMENTATION_SUMMARY.md` | Project overview |
+| File                        | Purpose                  |
+| --------------------------- | ------------------------ |
+| `SWAGGER_GUIDE.md`          | Comprehensive user guide |
+| `API_TESTING.md`            | 40+ curl examples        |
+| `SETUP_GUIDE.md`            | Setup instructions       |
+| `README.md`                 | General documentation    |
+| `DEPLOYMENT_CHECKLIST.md`   | Production deployment    |
+| `IMPLEMENTATION_SUMMARY.md` | Project overview         |
 
 ---
 
@@ -366,17 +395,20 @@ npm run dev
 ## 💡 Tips
 
 ### For Development
+
 - Use Swagger UI for testing
 - Copy curl commands from Swagger UI
 - Use "Try it out" for quick testing
 
 ### For Integration
+
 - Store tokens securely
 - Refresh tokens before expiry
 - Implement retry logic for 5xx errors
 - Log API responses for debugging
 
 ### For Production
+
 - Use environment-specific URLs
 - Implement request/response logging
 - Set up monitoring and alerts

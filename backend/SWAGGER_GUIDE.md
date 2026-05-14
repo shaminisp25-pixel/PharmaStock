@@ -1,17 +1,21 @@
 # PharmaStock API Documentation
 
 ## Overview
+
 Swagger/OpenAPI documentation has been successfully integrated into the PharmaStock backend API. The documentation is automatically generated and provides interactive API testing capabilities.
 
 ## Accessing the Documentation
 
 ### Local Development
+
 1. Start the backend server:
+
    ```bash
    npm run dev
    ```
 
 2. Open your browser and navigate to:
+
    ```
    http://localhost:5000/api-docs
    ```
@@ -19,19 +23,23 @@ Swagger/OpenAPI documentation has been successfully integrated into the PharmaSt
 3. You'll see the Swagger UI interface with all API endpoints documented
 
 ### Production
+
 - Access the API docs at: `{your-domain}/api-docs`
 
 ## Features
 
 ### ✅ Interactive API Testing
+
 - Try out API endpoints directly from the documentation
 - No need for external tools like Postman
 - Real-time response examples
 
 ### ✅ Authentication
+
 The documentation supports two authentication methods:
 
 #### JWT Bearer Token (Most Endpoints)
+
 1. Login to get an access token
 2. Click the **Authorize** button in Swagger UI
 3. Select **BearerAuth**
@@ -39,13 +47,16 @@ The documentation supports two authentication methods:
 5. Click **Authorize**
 
 #### API Key Authentication (Integration Endpoints)
+
 1. Click the **Authorize** button
 2. Select **ApiKeyAuth**
 3. Enter your API key in the header
 4. Click **Authorize**
 
 ### ✅ Comprehensive Endpoint Documentation
+
 All endpoints are organized by resource:
+
 - **Authentication** - Login, register, token refresh
 - **Users** - User management (CRUD operations)
 - **Warehouses** - Warehouse management
@@ -60,89 +71,100 @@ All endpoints are organized by resource:
 ## API Endpoints Summary
 
 ### Authentication (`/auth`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | Register new user |
-| POST | `/auth/login` | User login |
-| POST | `/auth/refresh` | Refresh access token |
-| POST | `/auth/logout` | User logout |
-| PATCH | `/auth/change-password` | Change password |
+
+| Method | Endpoint                | Description          |
+| ------ | ----------------------- | -------------------- |
+| POST   | `/auth/register`        | Register new user    |
+| POST   | `/auth/login`           | User login           |
+| POST   | `/auth/refresh`         | Refresh access token |
+| POST   | `/auth/logout`          | User logout          |
+| PATCH  | `/auth/change-password` | Change password      |
 
 ### Users (`/users`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/users` | List all users (paginated) |
-| GET | `/users/{id}` | Get user by ID |
-| POST | `/users` | Create new user |
-| PATCH | `/users/{id}` | Update user |
-| DELETE | `/users/{id}` | Delete user |
+
+| Method | Endpoint      | Description                |
+| ------ | ------------- | -------------------------- |
+| GET    | `/users`      | List all users (paginated) |
+| GET    | `/users/{id}` | Get user by ID             |
+| POST   | `/users`      | Create new user            |
+| PATCH  | `/users/{id}` | Update user                |
+| DELETE | `/users/{id}` | Delete user                |
 
 ### Warehouses (`/warehouses`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/warehouses` | List warehouses |
-| GET | `/warehouses/{id}` | Get warehouse details |
-| POST | `/warehouses` | Create warehouse |
-| PATCH | `/warehouses/{id}` | Update warehouse |
-| DELETE | `/warehouses/{id}` | Delete warehouse |
+
+| Method | Endpoint           | Description           |
+| ------ | ------------------ | --------------------- |
+| GET    | `/warehouses`      | List warehouses       |
+| GET    | `/warehouses/{id}` | Get warehouse details |
+| POST   | `/warehouses`      | Create warehouse      |
+| PATCH  | `/warehouses/{id}` | Update warehouse      |
+| DELETE | `/warehouses/{id}` | Delete warehouse      |
 
 ### Drugs (`/drugs`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/drugs` | List all drugs |
-| GET | `/drugs/{id}` | Get drug details |
-| POST | `/drugs` | Create drug |
-| PATCH | `/drugs/{id}` | Update drug |
-| DELETE | `/drugs/{id}` | Delete drug |
+
+| Method | Endpoint      | Description      |
+| ------ | ------------- | ---------------- |
+| GET    | `/drugs`      | List all drugs   |
+| GET    | `/drugs/{id}` | Get drug details |
+| POST   | `/drugs`      | Create drug      |
+| PATCH  | `/drugs/{id}` | Update drug      |
+| DELETE | `/drugs/{id}` | Delete drug      |
 
 ### Batches (`/batches`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/batches` | List batches |
-| GET | `/batches/{id}` | Get batch details |
-| POST | `/batches` | Create batch |
-| PATCH | `/batches/{id}/status` | Update batch status |
-| POST | `/batches/{id}/dispatch` | Dispatch batch |
-| POST | `/batches/scan` | Scan batch |
-| DELETE | `/batches/{id}` | Delete batch |
+
+| Method | Endpoint                 | Description         |
+| ------ | ------------------------ | ------------------- |
+| GET    | `/batches`               | List batches        |
+| GET    | `/batches/{id}`          | Get batch details   |
+| POST   | `/batches`               | Create batch        |
+| PATCH  | `/batches/{id}/status`   | Update batch status |
+| POST   | `/batches/{id}/dispatch` | Dispatch batch      |
+| POST   | `/batches/scan`          | Scan batch          |
+| DELETE | `/batches/{id}`          | Delete batch        |
 
 ### Alerts (`/alerts`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/alerts` | List alerts |
-| GET | `/alerts/{id}` | Get alert details |
-| PATCH | `/alerts/{id}/resolve` | Resolve alert |
+
+| Method | Endpoint               | Description       |
+| ------ | ---------------------- | ----------------- |
+| GET    | `/alerts`              | List alerts       |
+| GET    | `/alerts/{id}`         | Get alert details |
+| PATCH  | `/alerts/{id}/resolve` | Resolve alert     |
 
 ### Audit (`/audit`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/audit` | Get audit logs |
+
+| Method | Endpoint | Description    |
+| ------ | -------- | -------------- |
+| GET    | `/audit` | Get audit logs |
 
 ### Import (`/import`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/import/logs` | Get import logs |
-| GET | `/import/logs/{id}` | Get import log details |
-| GET | `/import/template` | Download CSV template |
-| POST | `/import/drugs/upload` | Upload drugs from CSV |
+
+| Method | Endpoint               | Description            |
+| ------ | ---------------------- | ---------------------- |
+| GET    | `/import/logs`         | Get import logs        |
+| GET    | `/import/logs/{id}`    | Get import log details |
+| GET    | `/import/template`     | Download CSV template  |
+| POST   | `/import/drugs/upload` | Upload drugs from CSV  |
 
 ### Reports (`/reports`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/reports/expiry` | Get expiry report |
-| GET | `/reports/dispatch` | Get dispatch report |
-| GET | `/reports/stock` | Get stock report |
-| GET | `/reports/temperature-sensitive` | Temperature-sensitive drugs |
+
+| Method | Endpoint                         | Description                 |
+| ------ | -------------------------------- | --------------------------- |
+| GET    | `/reports/expiry`                | Get expiry report           |
+| GET    | `/reports/dispatch`              | Get dispatch report         |
+| GET    | `/reports/stock`                 | Get stock report            |
+| GET    | `/reports/temperature-sensitive` | Temperature-sensitive drugs |
 
 ### Integration (`/integration`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/integration/erp/sync` | Sync with ERP system |
-| POST | `/integration/prescription/lookup` | Lookup prescription |
+
+| Method | Endpoint                           | Description          |
+| ------ | ---------------------------------- | -------------------- |
+| POST   | `/integration/erp/sync`            | Sync with ERP system |
+| POST   | `/integration/prescription/lookup` | Lookup prescription  |
 
 ## Authentication
 
 ### Login Flow
+
 ```bash
 1. Call POST /auth/login with credentials
 2. Receive accessToken and refreshToken
@@ -151,7 +173,9 @@ All endpoints are organized by resource:
 ```
 
 ### Role-Based Access Control (RBAC)
+
 The API implements role-based access control. Roles:
+
 - **ADMIN** - Full access to all endpoints
 - **MANAGER** - Can manage users, warehouses, drugs, batches
 - **WAREHOUSE_STAFF** - Can view inventory, manage batches
@@ -162,6 +186,7 @@ Each endpoint requires specific permissions. Check the Swagger docs for required
 ## Response Format
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -175,6 +200,7 @@ Each endpoint requires specific permissions. Check the Swagger docs for required
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -189,13 +215,12 @@ Each endpoint requires specific permissions. Check the Swagger docs for required
 ```
 
 ### Paginated Response
+
 ```json
 {
   "success": true,
   "data": {
-    "items": [
-      { "id": "uuid", "name": "Item 1" }
-    ],
+    "items": [{ "id": "uuid", "name": "Item 1" }],
     "pagination": {
       "total": 100,
       "page": 1,
@@ -209,6 +234,7 @@ Each endpoint requires specific permissions. Check the Swagger docs for required
 ## Rate Limiting
 
 The API implements rate limiting:
+
 - **Global limit**: 100 requests per 15 minutes
 - **Auth limit**: 10 requests per 15 minutes (login, register)
 - **Import limit**: Custom limits for bulk operations
@@ -218,6 +244,7 @@ If rate limit exceeded, you'll receive HTTP 429 (Too Many Requests).
 ## Security Headers
 
 The API includes security headers:
+
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `X-XSS-Protection: 1; mode=block`
@@ -226,27 +253,29 @@ The API includes security headers:
 ## CORS
 
 Cross-Origin Resource Sharing is configured for:
+
 - Allowed methods: GET, POST, PATCH, DELETE
 - Allowed headers: Content-Type, Authorization, X-API-Key
 - Credentials are supported
 
 ## Common HTTP Status Codes
 
-| Code | Meaning |
-|------|---------|
-| 200 | OK - Request successful |
-| 201 | Created - Resource created |
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Authentication required |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource not found |
-| 409 | Conflict - Resource already exists |
-| 429 | Too Many Requests - Rate limit exceeded |
-| 500 | Server Error - Internal error |
+| Code | Meaning                                 |
+| ---- | --------------------------------------- |
+| 200  | OK - Request successful                 |
+| 201  | Created - Resource created              |
+| 400  | Bad Request - Invalid input             |
+| 401  | Unauthorized - Authentication required  |
+| 403  | Forbidden - Insufficient permissions    |
+| 404  | Not Found - Resource not found          |
+| 409  | Conflict - Resource already exists      |
+| 429  | Too Many Requests - Rate limit exceeded |
+| 500  | Server Error - Internal error           |
 
 ## Examples
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:5000/api/v1/auth/login \
   -H "Content-Type: application/json" \
@@ -257,6 +286,7 @@ curl -X POST http://localhost:5000/api/v1/auth/login \
 ```
 
 ### Create Drug
+
 ```bash
 curl -X POST http://localhost:5000/api/v1/drugs \
   -H "Authorization: Bearer {token}" \
@@ -270,6 +300,7 @@ curl -X POST http://localhost:5000/api/v1/drugs \
 ```
 
 ### List Batches
+
 ```bash
 curl -X GET "http://localhost:5000/api/v1/batches?page=1&limit=10" \
   -H "Authorization: Bearer {token}"
@@ -278,16 +309,19 @@ curl -X GET "http://localhost:5000/api/v1/batches?page=1&limit=10" \
 ## Troubleshooting
 
 ### Can't access documentation
+
 - Ensure backend is running: `npm run dev`
 - Check if port 5000 is available
 - Try accessing directly: `http://localhost:5000/api-docs`
 
 ### Authentication errors
+
 - Verify token is valid and not expired
 - Check token format: `Bearer {token}`
 - Ensure you have required permissions for the endpoint
 
 ### Rate limit exceeded
+
 - Wait for the rate limit window to reset (15 minutes)
 - Consider optimizing your API calls
 - Contact administrator for higher limits if needed
@@ -295,6 +329,7 @@ curl -X GET "http://localhost:5000/api/v1/batches?page=1&limit=10" \
 ## Support
 
 For API issues or questions:
+
 - Check the Swagger documentation at `/api-docs`
 - Review error messages for detailed information
 - Check audit logs for action history

@@ -126,51 +126,60 @@ npm start
 #### 3. Test API Endpoints
 
 **Dashboard**
+
 - [ ] Navigate to Dashboard
 - [ ] Should load stats (expiry alerts, total alerts, drugs, stock)
 - [ ] Stats should update in real-time
 
 **Drugs**
+
 - [ ] Navigate to Drugs page
 - [ ] Should load drug list from API
 - [ ] Search functionality works
 - [ ] Pagination works
 
 **Batches**
+
 - [ ] Navigate to Batches page
 - [ ] Should load batch list
 - [ ] Filtering by status/warehouse works
 - [ ] Expiry date colors show correctly (green/yellow/red)
 
 **Alerts**
+
 - [ ] Navigate to Alerts page
 - [ ] Should load alerts from API
 - [ ] Stats at top show correct counts
 - [ ] Can filter by type and warehouse
 
 **Reports, Users, Audit**
+
 - [ ] Pages load without errors
 - [ ] API calls succeed
 
 #### 4. Test Error Handling
 
 **401 Unauthorized**
+
 - [ ] Delete `localStorage.access_token`
 - [ ] Refresh dashboard page
 - [ ] Should redirect to login
 - [ ] Error message appears
 
 **404 Not Found**
+
 - [ ] Navigate to non-existent path like `/invalid`
 - [ ] Should show 404 error
 
 **Network Error**
+
 - [ ] Open DevTools → Network tab
 - [ ] Throttle network (slow 3G)
 - [ ] Make API request
 - [ ] Should show loading state and handle timeout
 
 **Rate Limiting (429)**
+
 - [ ] Make 101 requests rapidly to backend
 - [ ] Should see rate limit error
 - [ ] Frontend auto-retries
@@ -329,6 +338,7 @@ npm start
 ### Deployment Steps
 
 **Backend**
+
 ```bash
 # Build
 npm run build
@@ -344,6 +354,7 @@ npm run test
 ```
 
 **Frontend**
+
 ```bash
 # Build
 npm run build
@@ -360,17 +371,20 @@ ls -la .next
 ## Monitoring Setup
 
 ### Sentry (Error Tracking)
+
 ```bash
 npm install @sentry/nextjs
 npm install @sentry/node
 ```
 
 ### DataDog (APM)
+
 ```bash
 npm install dd-trace
 ```
 
 ### LogRocket (Session Replay)
+
 ```bash
 npm install logrocket
 ```
@@ -382,6 +396,7 @@ npm install logrocket
 ### Issue: 401 Unauthorized on API calls
 
 **Solution:**
+
 - Check if token is in localStorage
 - Verify backend JWT_SECRET matches
 - Check token expiry
@@ -390,6 +405,7 @@ npm install logrocket
 ### Issue: CORS Error
 
 **Solution:**
+
 - Add frontend URL to ALLOWED_ORIGINS
 - Check credentials: true in fetch
 - Verify preflight requests allowed
@@ -397,6 +413,7 @@ npm install logrocket
 ### Issue: API timeout
 
 **Solution:**
+
 - Check backend is running
 - Verify network connectivity
 - Increase timeout in api-client.ts
@@ -405,6 +422,7 @@ npm install logrocket
 ### Issue: Can't login
 
 **Solution:**
+
 - Verify user exists in database
 - Check password hashing
 - Verify JWT secrets configured
@@ -413,6 +431,7 @@ npm install logrocket
 ### Issue: Token not refreshing
 
 **Solution:**
+
 - Check refreshToken in cookies
 - Verify refresh endpoint works
 - Check JWT_REFRESH_SECRET
@@ -439,5 +458,5 @@ npm install logrocket
 - [ ] Documentation updated
 - [ ] Monitoring alerts configured
 
-**Date**: ________________
-**Team**: ________________
+**Date**: ******\_\_\_\_******
+**Team**: ******\_\_\_\_******

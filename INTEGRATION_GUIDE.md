@@ -82,12 +82,14 @@ app/
 ### 1. Token Management
 
 **Access Token**
+
 - Short-lived (15 minutes)
 - Stored in localStorage (for SPA accessibility)
 - Sent in `Authorization: Bearer <token>` header
 - Automatically refreshed before expiration
 
 **Refresh Token**
+
 - Long-lived (7 days)
 - HttpOnly cookie (server set-cookie)
 - Used only for token refresh endpoint
@@ -111,16 +113,20 @@ private async refreshAccessToken(): Promise<string> {
 ### 2. CORS Configuration
 
 Backend (`src/app.ts`):
+
 ```typescript
-app.use(cors({
-  origin: env.ALLOWED_ORIGINS.split(','),
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: env.ALLOWED_ORIGINS.split(","),
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-API-Key"],
+    credentials: true,
+  }),
+);
 ```
 
 Frontend (`.env.local`):
+
 ```
 NEXT_PUBLIC_API_URL=http://localhost:5000
 NEXT_PUBLIC_API_PREFIX=/api/v1
@@ -129,6 +135,7 @@ NEXT_PUBLIC_API_PREFIX=/api/v1
 ### 3. Security Headers
 
 Backend implements:
+
 - **Helmet.js** - Sets HTTP security headers
 - **HSTS** - Enforces HTTPS
 - **CSP** - Prevents XSS attacks
@@ -138,22 +145,26 @@ Backend implements:
 ### 4. Rate Limiting
 
 Backend:
+
 - Global rate limit: 100 requests/15 minutes per IP
 - Auth endpoints: 5 requests/15 minutes (stricter)
 - Automatically enforced by middleware
 
 Frontend:
+
 - Retries with exponential backoff on 429 responses
 - Max retry: 10 seconds
 
 ### 5. Input Validation
 
 Frontend:
+
 - Client-side validation for UX
 - Form field validation
 - File type/size validation
 
 Backend:
+
 - Zod schema validation on all endpoints
 - Sanitizes and validates all inputs
 - Rejects unknown fields
@@ -161,6 +172,7 @@ Backend:
 ### 6. Error Handling
 
 Errors are never exposed to frontend:
+
 - Server errors (500) return generic message
 - Stack traces logged internally only
 - Sensitive data filtered from responses
@@ -262,6 +274,7 @@ Redirects to /login
 ### HTTP Client Features
 
 **Automatic Request Retries**
+
 ```typescript
 // Retries on:
 // - 408 Request Timeout
@@ -273,6 +286,7 @@ Redirects to /login
 ```
 
 **Request Interceptors**
+
 ```typescript
 private buildHeaders(options: RequestOptions) {
   const headers: Record<string, string> = {
@@ -291,6 +305,7 @@ private buildHeaders(options: RequestOptions) {
 ```
 
 **Response Interceptors**
+
 ```typescript
 if (!response.ok) {
   if (response.status === 401) {
@@ -302,7 +317,7 @@ if (!response.ok) {
   if (response.status >= 500) {
     // Retry server errors
   }
-  
+
   throw this.handleError(response);
 }
 ```
@@ -320,8 +335,8 @@ const drug = await DrugService.getById(id);
 // Returns: Drug
 
 await DrugService.create({
-  name: 'New Drug',
-  manufacturer: 'Bayer',
+  name: "New Drug",
+  manufacturer: "Bayer",
   // ... other fields
 });
 // Returns: Drug with ID
@@ -329,38 +344,38 @@ await DrugService.create({
 
 ### API Endpoints Reference
 
-| Service | Method | Endpoint | Auth | Permissions |
-|---------|--------|----------|------|-------------|
-| **Auth** | POST | /auth/register | No | - |
-| | POST | /auth/login | No | - |
-| | POST | /auth/refresh | Yes | - |
-| | POST | /auth/logout | Yes | - |
-| | POST | /auth/change-password | Yes | - |
-| **Drugs** | GET | /drugs | Yes | drugs:read |
-| | GET | /drugs/{id} | Yes | drugs:read |
-| | POST | /drugs | Yes | drugs:create |
-| | PATCH | /drugs/{id} | Yes | drugs:update |
-| | DELETE | /drugs/{id} | Yes | drugs:delete |
-| **Batches** | GET | /batches | Yes | batches:read |
-| | GET | /batches/{id} | Yes | batches:read |
-| | POST | /batches | Yes | batches:create |
-| | PATCH | /batches/{id} | Yes | batches:update |
-| | POST | /batches/{id}/dispatch | Yes | batches:dispatch |
-| | POST | /batches/scan | Yes | batches:read |
-| **Alerts** | GET | /alerts | Yes | alerts:read |
-| | GET | /alerts/{id} | Yes | alerts:read |
-| | PATCH | /alerts/{id}/resolve | Yes | alerts:resolve |
-| **Users** | GET | /users | Yes | users:read |
-| | GET | /users/me | Yes | - |
-| | POST | /users | Yes | users:create |
-| | PATCH | /users/{id} | Yes | users:update |
-| | DELETE | /users/{id} | Yes | users:delete |
-| **Reports** | POST | /reports/expiry | Yes | reports:generate |
-| | POST | /reports/dispatch | Yes | reports:generate |
-| | GET | /reports/{id}/export | Yes | reports:export |
-| **Import** | POST | /import | Yes | import:upload |
-| **Audit** | GET | /audit | Yes | audit:read |
-| | GET | /audit/export | Yes | audit:export |
+| Service     | Method | Endpoint               | Auth | Permissions      |
+| ----------- | ------ | ---------------------- | ---- | ---------------- |
+| **Auth**    | POST   | /auth/register         | No   | -                |
+|             | POST   | /auth/login            | No   | -                |
+|             | POST   | /auth/refresh          | Yes  | -                |
+|             | POST   | /auth/logout           | Yes  | -                |
+|             | POST   | /auth/change-password  | Yes  | -                |
+| **Drugs**   | GET    | /drugs                 | Yes  | drugs:read       |
+|             | GET    | /drugs/{id}            | Yes  | drugs:read       |
+|             | POST   | /drugs                 | Yes  | drugs:create     |
+|             | PATCH  | /drugs/{id}            | Yes  | drugs:update     |
+|             | DELETE | /drugs/{id}            | Yes  | drugs:delete     |
+| **Batches** | GET    | /batches               | Yes  | batches:read     |
+|             | GET    | /batches/{id}          | Yes  | batches:read     |
+|             | POST   | /batches               | Yes  | batches:create   |
+|             | PATCH  | /batches/{id}          | Yes  | batches:update   |
+|             | POST   | /batches/{id}/dispatch | Yes  | batches:dispatch |
+|             | POST   | /batches/scan          | Yes  | batches:read     |
+| **Alerts**  | GET    | /alerts                | Yes  | alerts:read      |
+|             | GET    | /alerts/{id}           | Yes  | alerts:read      |
+|             | PATCH  | /alerts/{id}/resolve   | Yes  | alerts:resolve   |
+| **Users**   | GET    | /users                 | Yes  | users:read       |
+|             | GET    | /users/me              | Yes  | -                |
+|             | POST   | /users                 | Yes  | users:create     |
+|             | PATCH  | /users/{id}            | Yes  | users:update     |
+|             | DELETE | /users/{id}            | Yes  | users:delete     |
+| **Reports** | POST   | /reports/expiry        | Yes  | reports:generate |
+|             | POST   | /reports/dispatch      | Yes  | reports:generate |
+|             | GET    | /reports/{id}/export   | Yes  | reports:export   |
+| **Import**  | POST   | /import                | Yes  | import:upload    |
+| **Audit**   | GET    | /audit                 | Yes  | audit:read       |
+|             | GET    | /audit/export          | Yes  | audit:export     |
 
 ---
 
@@ -374,12 +389,10 @@ try {
   setDrugs(data.data);
 } catch (err) {
   // Error is already standardized by apiClient
-  const message = err instanceof Error 
-    ? err.message 
-    : 'Failed to load drugs';
-  
+  const message = err instanceof Error ? err.message : "Failed to load drugs";
+
   setError(message);
-  
+
   // User-friendly messages:
   // - Network errors
   // - 401: "Please log in again"
@@ -419,34 +432,36 @@ try {
 ### Frontend Validation
 
 **Login Form**
+
 ```typescript
 if (!email || !password) {
-  setError('Please fill in all fields');
+  setError("Please fill in all fields");
   return;
 }
 
-if (!email.includes('@')) {
-  setError('Please enter a valid email address');
+if (!email.includes("@")) {
+  setError("Please enter a valid email address");
   return;
 }
 
 if (password.length < 8) {
-  setError('Password must be at least 8 characters');
+  setError("Password must be at least 8 characters");
   return;
 }
 ```
 
 **File Upload Validation**
+
 ```typescript
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 if (file.size > MAX_FILE_SIZE) {
-  setError('File size exceeds 5MB limit');
+  setError("File size exceeds 5MB limit");
   return;
 }
 
-if (!['application/vnd.ms-excel', 'text/csv'].includes(file.type)) {
-  setError('Only CSV and Excel files are supported');
+if (!["application/vnd.ms-excel", "text/csv"].includes(file.type)) {
+  setError("Only CSV and Excel files are supported");
   return;
 }
 ```
@@ -454,20 +469,22 @@ if (!['application/vnd.ms-excel', 'text/csv'].includes(file.type)) {
 ### Backend Validation
 
 **Zod Schema**
+
 ```typescript
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(128),
   name: z.string().min(1).max(255),
-  role: z.enum(['ADMIN', 'MANAGER', 'WAREHOUSE_STAFF', 'VIEWER']),
+  role: z.enum(["ADMIN", "MANAGER", "WAREHOUSE_STAFF", "VIEWER"]),
 });
 ```
 
 **Request Validation Middleware**
+
 ```typescript
 router.post(
-  '/register',
-  validate(registerSchema),  // Validates request body
+  "/register",
+  validate(registerSchema), // Validates request body
   AuthController.register,
 );
 ```
@@ -479,6 +496,7 @@ router.post(
 ### Environment Configuration
 
 Frontend (`.env.local`):
+
 ```
 # API Configuration
 NEXT_PUBLIC_API_URL=https://api.pharmastock.com
@@ -495,6 +513,7 @@ NEXT_PUBLIC_DEFAULT_PAGE_SIZE=10
 ```
 
 Backend (`.env`):
+
 ```
 # Server
 NODE_ENV=production
@@ -527,6 +546,7 @@ LOG_LEVEL=info
 ### Docker Deployment
 
 Frontend Dockerfile:
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -539,6 +559,7 @@ CMD ["npm", "start"]
 ```
 
 Backend Dockerfile:
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -551,8 +572,9 @@ CMD ["npm", "start"]
 ```
 
 Docker Compose:
+
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   frontend:
     build: ./frontend
@@ -591,32 +613,29 @@ services:
 ### Frontend Testing
 
 **Unit Tests (Jest + React Testing Library)**
+
 ```typescript
-describe('AuthService', () => {
-  it('should login with valid credentials', async () => {
-    const result = await AuthService.login(
-      'user@test.com',
-      'password123'
-    );
-    
-    expect(result).toHaveProperty('accessToken');
-    expect(result).toHaveProperty('user');
+describe("AuthService", () => {
+  it("should login with valid credentials", async () => {
+    const result = await AuthService.login("user@test.com", "password123");
+
+    expect(result).toHaveProperty("accessToken");
+    expect(result).toHaveProperty("user");
   });
 
-  it('should throw error on invalid credentials', async () => {
-    await expect(
-      AuthService.login('user@test.com', 'wrong')
-    ).rejects.toThrow();
+  it("should throw error on invalid credentials", async () => {
+    await expect(AuthService.login("user@test.com", "wrong")).rejects.toThrow();
   });
 });
 ```
 
 **Integration Tests**
+
 ```typescript
 describe('Login Flow', () => {
   it('should login and redirect to dashboard', async () => {
     render(<LoginPage />);
-    
+
     await userEvent.type(
       screen.getByPlaceholderText(/email/i),
       'user@test.com'
@@ -626,7 +645,7 @@ describe('Login Flow', () => {
       'password123'
     );
     await userEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    
+
     await waitFor(() => {
       expect(window.location.pathname).toBe('/dashboard');
     });
@@ -637,20 +656,21 @@ describe('Login Flow', () => {
 ### Backend Testing
 
 **API Tests (Supertest)**
+
 ```typescript
-describe('GET /api/v1/drugs', () => {
-  it('should return 401 without token', async () => {
-    const res = await request(app).get('/api/v1/drugs');
+describe("GET /api/v1/drugs", () => {
+  it("should return 401 without token", async () => {
+    const res = await request(app).get("/api/v1/drugs");
     expect(res.status).toBe(401);
   });
 
-  it('should return drugs with valid token', async () => {
+  it("should return drugs with valid token", async () => {
     const res = await request(app)
-      .get('/api/v1/drugs')
-      .set('Authorization', `Bearer ${validToken}`);
-    
+      .get("/api/v1/drugs")
+      .set("Authorization", `Bearer ${validToken}`);
+
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('data');
+    expect(res.body).toHaveProperty("data");
     expect(Array.isArray(res.body.data)).toBe(true);
   });
 });
@@ -698,15 +718,16 @@ describe('GET /api/v1/drugs', () => {
 ## Monitoring & Logging
 
 ### Frontend Logging
+
 ```typescript
 // src/utils/logger.ts
-import { apiClient } from './api-client';
+import { apiClient } from "./api-client";
 
 export const logError = (error: Error) => {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     // Send to error tracking service (Sentry, DataDog, etc.)
-    fetch('/api/v1/logs', {
-      method: 'POST',
+    fetch("/api/v1/logs", {
+      method: "POST",
       body: JSON.stringify({ error: error.message, stack: error.stack }),
     });
   } else {
@@ -716,11 +737,12 @@ export const logError = (error: Error) => {
 ```
 
 ### Backend Logging
+
 ```typescript
 // Uses Winston logger
-logger.info('User logged in', { userId, timestamp });
-logger.warn('Rate limit exceeded', { ip, limit });
-logger.error('Database connection failed', { error });
+logger.info("User logged in", { userId, timestamp });
+logger.warn("Rate limit exceeded", { ip, limit });
+logger.error("Database connection failed", { error });
 ```
 
 ### Metrics to Monitor
@@ -768,21 +790,25 @@ logger.error('Database connection failed', { error });
 ### Common Issues
 
 **Token Refresh Loop**
+
 - Check JWT secrets match between backend and frontend
 - Verify refreshToken cookie is being set
 - Check token expiry times
 
 **CORS Errors**
+
 - Verify ALLOWED_ORIGINS environment variable
 - Check credentials: true in fetch options
 - Verify preflight requests are allowed
 
 **API Timeouts**
+
 - Increase timeout in api-client.ts
 - Check backend performance
 - Verify network connectivity
 
 **Login Redirects to Login**
+
 - Check if refreshToken is valid
 - Verify localStorage access
 - Check browser cookie settings

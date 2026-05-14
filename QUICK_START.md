@@ -48,6 +48,7 @@ cp .env.example .env
 ```
 
 Edit `.env`:
+
 ```env
 NODE_ENV=development
 PORT=5000
@@ -119,6 +120,7 @@ cp .env.example .env.local
 ```
 
 Edit `.env.local`:
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000
 NEXT_PUBLIC_API_PREFIX=/api/v1
@@ -162,6 +164,7 @@ On the login page:
 3. Click "Sign In"
 
 You should:
+
 - See loading spinner briefly
 - Get redirected to `/dashboard`
 - See real statistics (drugs, batches, alerts)
@@ -181,6 +184,7 @@ Browse the different pages:
 ### Fourth Test: API Documentation
 
 Visit:
+
 ```
 http://localhost:5000/api-docs
 ```
@@ -360,7 +364,9 @@ Every backend response follows this format:
 ```json
 {
   "status": "success",
-  "data": { /* actual data */ },
+  "data": {
+    /* actual data */
+  },
   "timestamp": "2024-01-01T00:00:00Z"
 }
 ```
@@ -411,9 +417,9 @@ curl http://localhost:3000
 Open browser console (F12) and run:
 
 ```javascript
-fetch('http://localhost:5000/api/v1/health')
-  .then(r => r.json())
-  .then(d => console.log(d))
+fetch("http://localhost:5000/api/v1/health")
+  .then((r) => r.json())
+  .then((d) => console.log(d));
 ```
 
 ### View Backend Logs
@@ -451,17 +457,20 @@ npm run prisma:studio
 ### Backend won't start
 
 **Error**: `Cannot find module '@prisma/client'`
+
 ```bash
 npm install
 npm run prisma:generate
 ```
 
 **Error**: `DATABASE_URL not set`
+
 - Check `.env` file exists
 - Check `DATABASE_URL` is set correctly
 - Check PostgreSQL is running
 
 **Error**: `Port 5000 already in use`
+
 ```bash
 # Change PORT in .env or kill the process
 lsof -i :5000
@@ -471,12 +480,14 @@ kill -9 <PID>
 ### Frontend won't start
 
 **Error**: `Cannot find module 'next'`
+
 ```bash
 npm install
 npm run build
 ```
 
 **Error**: `ECONNREFUSED at http://localhost:5000`
+
 - Backend is not running
 - Check backend is on port 5000
 - Check `NEXT_PUBLIC_API_URL` in `.env.local`
@@ -484,15 +495,18 @@ npm run build
 ### Can't login
 
 **Error**: `Invalid credentials`
+
 - Check you're using correct email/password
 - Try demo: `john@pharmastock.com` / `password123`
 - Check database has users (run seed: `npm run prisma:seed`)
 
 **Error**: `CORS error`
+
 - Check backend `ALLOWED_ORIGINS` includes `http://localhost:3000`
 - Check frontend `NEXT_PUBLIC_API_URL` matches backend URL
 
 **Error**: `Token expired immediately`
+
 - Check `JWT_SECRET` and `JWT_REFRESH_SECRET` in backend `.env`
 - Check system clock is correct
 - Try logging out and logging back in
@@ -532,6 +546,7 @@ npm run build
 ### Deploy
 
 1. **Build Frontend**:
+
    ```bash
    cd frontend
    npm run build
@@ -539,6 +554,7 @@ npm run build
    ```
 
 2. **Build Backend**:
+
    ```bash
    cd backend
    npm run build
@@ -553,16 +569,19 @@ npm run build
 ## Resources
 
 📚 **Documentation**
+
 - [INTEGRATION_GUIDE.md](/INTEGRATION_GUIDE.md) - Comprehensive integration guide
 - [ARCHITECTURE.md](/ARCHITECTURE.md) - System architecture
 - [QUICK_REFERENCE.md](/QUICK_REFERENCE.md) - Code examples
 - [INTEGRATION_CHECKLIST.md](/INTEGRATION_CHECKLIST.md) - Setup verification
 
 🔗 **API Documentation**
+
 - http://localhost:5000/api-docs - Swagger UI
 - `backend/IMPLEMENTATION_SUMMARY.md` - Backend documentation
 
 💬 **Code Examples**
+
 - `frontend/app/dashboard/page.tsx` - Complete page example
 - `frontend/src/lib/api-services.ts` - API service pattern
 - `backend/src/controllers/auth.controller.ts` - Controller pattern
@@ -572,24 +591,32 @@ npm run build
 ## Pro Tips
 
 ### Tip 1: Use Demo Account
+
 Instead of creating a new user each time, use the demo account:
+
 - Email: `john@pharmastock.com`
 - Password: `password123`
 
 ### Tip 2: Check Swagger First
+
 Before testing a page, check the API endpoint in Swagger:
+
 ```
 http://localhost:5000/api-docs
 ```
+
 Try requests there first to verify API works.
 
 ### Tip 3: Use Browser DevTools
+
 Press F12 in browser to:
+
 - View Network tab (see API requests/responses)
 - View Console (see errors)
 - View Application tab (see localStorage/cookies)
 
 ### Tip 4: Auto-format Code
+
 ```bash
 # Frontend
 cd frontend && npm run format
@@ -599,7 +626,9 @@ cd backend && npm run format
 ```
 
 ### Tip 5: Seed Database
+
 If you want sample data:
+
 ```bash
 cd backend
 npm run prisma:seed

@@ -5,16 +5,16 @@
 ### Authentication
 
 ```typescript
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from "@/lib/auth-context";
 
 export default function MyComponent() {
   const { user, isAuthenticated, login, logout, error } = useAuth();
 
   // Login
   try {
-    await login('user@example.com', 'password123');
+    await login("user@example.com", "password123");
   } catch (err) {
-    console.error('Login failed:', err);
+    console.error("Login failed:", err);
   }
 
   // Logout
@@ -22,7 +22,7 @@ export default function MyComponent() {
 
   // Check authentication
   if (isAuthenticated) {
-    console.log('Logged in as:', user?.name);
+    console.log("Logged in as:", user?.name);
   }
 }
 ```
@@ -30,9 +30,9 @@ export default function MyComponent() {
 ### API Services
 
 ```typescript
-import { 
-  DrugService, 
-  BatchService, 
+import {
+  DrugService,
+  BatchService,
   AlertService,
   UserService,
   ReportService,
@@ -115,8 +115,8 @@ export default function MyPage() {
   // Render
   return (
     <AppLayout>
-      <PageHeader 
-        title="Page Title" 
+      <PageHeader
+        title="Page Title"
         subtitle="Page description"
         actions={<Button variant="primary">Action</Button>}
       />
@@ -155,9 +155,7 @@ export default function MyPage() {
 try {
   const result = await DrugService.getAll(1, 10);
 } catch (err) {
-  const message = err instanceof Error 
-    ? err.message 
-    : 'Unknown error';
+  const message = err instanceof Error ? err.message : "Unknown error";
   setError(message);
 }
 ```
@@ -165,7 +163,7 @@ try {
 ### Error Boundaries
 
 ```typescript
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 useEffect(() => {
   const load = async () => {
@@ -233,7 +231,7 @@ useEffect(() => {
 }, [filters]);
 
 // In render
-<Select 
+<Select
   value={filters.status}
   onChange={(e) => setFilters({ ...filters, status: e.target.value })}
 />
@@ -264,7 +262,7 @@ useEffect(() => {
 }, [debouncedSearch]);
 
 // In render
-<Input 
+<Input
   value={searchTerm}
   onChange={(e) => setSearchTerm(e.target.value)}
 />
@@ -291,7 +289,7 @@ const handleSubmit = async (formData) => {
 
 // In render
 {showModal && (
-  <Modal 
+  <Modal
     title="Add Drug"
     onClose={() => setShowModal(false)}
   >
@@ -329,7 +327,7 @@ export interface Batch {
   quantity: number;
   expiryDate: string;
   batchNumber: string;
-  status: 'active' | 'dispatched' | 'expired';
+  status: "active" | "dispatched" | "expired";
   temperature?: number;
   createdAt: string;
   updatedAt: string;
@@ -338,8 +336,8 @@ export interface Batch {
 
 export interface Alert {
   id: string;
-  type: 'expiry' | 'stock' | 'temperature' | 'dispatch' | 'import';
-  severity: 'critical' | 'error' | 'warning' | 'info';
+  type: "expiry" | "stock" | "temperature" | "dispatch" | "import";
+  severity: "critical" | "error" | "warning" | "info";
   title: string;
   message: string;
   resolved: boolean;
@@ -393,9 +391,9 @@ REDIS_URL=redis://localhost:6379
 
 ```javascript
 // In browser console
-localStorage.getItem('access_token')
-localStorage.getItem('user')
-localStorage.getItem('refresh_token')
+localStorage.getItem("access_token");
+localStorage.getItem("user");
+localStorage.getItem("refresh_token");
 ```
 
 ### Monitor API Calls
@@ -422,8 +420,8 @@ private makeRequest() {
 ```typescript
 // In any component
 const { user, isAuthenticated } = useAuth();
-console.log('User:', user);
-console.log('Is authenticated:', isAuthenticated);
+console.log("User:", user);
+console.log("Is authenticated:", isAuthenticated);
 ```
 
 ---
@@ -448,6 +446,7 @@ console.log('Is authenticated:', isAuthenticated);
 ## Support
 
 For issues or questions, refer to:
+
 - `/INTEGRATION_GUIDE.md` - Detailed integration guide
 - `/INTEGRATION_CHECKLIST.md` - Setup and verification checklist
 - `/backend/IMPLEMENTATION_SUMMARY.md` - Backend API documentation
