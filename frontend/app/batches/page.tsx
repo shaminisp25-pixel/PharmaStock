@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Badge, Select } from '@/components/ui';
+import { Card, Button, Badge, Select, Input } from '@/components/ui';
 import { AppLayout, PageHeader, Section, Sidebar, SidebarItem } from '@/components/layout';
 import { useRequireAuth } from '@/lib/auth-context';
 import { BatchService, Batch } from '@/lib/api-services';
 
 export default function BatchesPage() {
   const user = useRequireAuth();
+  if (!user) return null;
   const [batches, setBatches] = useState<Batch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export default function BatchesPage() {
         subtitle="Track and manage drug batches"
         actions={
           <>
-            <Input placeholder="Scan barcode..." size="sm" className="w-48" icon="📱" />
+            <Input placeholder="Scan barcode..." className="w-48" />
             <Button variant="primary">+ New Batch</Button>
           </>
         }

@@ -9,7 +9,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
 
   // Redis
-  REDIS_URL: z.string().url(),
+  REDIS_URL: z.string().url().default('redis://localhost:6379'),
 
   // JWT
   JWT_ACCESS_SECRET: z.string().min(32),
@@ -35,9 +35,9 @@ const envSchema = z.object({
   AUTH_RATE_LIMIT_MAX: z.string().transform(Number).default('10'),
 
   // External Integrations
-  ERP_WEBHOOK_SECRET: z.string().min(10),
-  PRESCRIPTION_API_URL: z.string().url(),
-  PRESCRIPTION_API_KEY: z.string().min(10),
+  ERP_WEBHOOK_SECRET: z.string().min(10).optional(),
+  PRESCRIPTION_API_URL: z.string().url().optional(),
+  PRESCRIPTION_API_KEY: z.string().min(10).optional(),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'http', 'debug']).default('info'),
@@ -48,7 +48,7 @@ const envSchema = z.object({
 
 type Env = z.infer<typeof envSchema>;
 
-let env: Env;
+let env: Env | null = null;
 
 export function initEnv(): Env {
   try {
@@ -68,7 +68,12 @@ export function initEnv(): Env {
 
 export function getEnv(): Env {
   if (!env) {
-    throw new Error('Environment not initialized. Call initEnv() first.');
+    // Try to initialize if not already done
+    try {
+      return initEnv();
+    } catch (error) {
+      throw new Error('Environment not initialized. Call initEnv() first.');
+    }
   }
   return env;
 }

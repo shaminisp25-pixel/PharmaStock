@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export class DrugService {
   static async getAllDrugs(
@@ -11,6 +9,7 @@ export class DrugService {
     category?: string,
     manufacturer?: string,
   ) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -42,6 +41,7 @@ export class DrugService {
   }
 
   static async getDrugById(id: string) {
+    const prisma = getPrismaClient();
     const drug = await prisma.drug.findUnique({
       where: { id },
       include: {
@@ -74,6 +74,7 @@ export class DrugService {
     category?: string,
     storageNotes?: string,
   ) {
+    const prisma = getPrismaClient();
     if (tempMin >= tempMax) {
       throw new ApiError(400, 'Min temperature must be less than max temperature');
     }
@@ -94,6 +95,7 @@ export class DrugService {
   }
 
   static async updateDrug(id: string, data: any) {
+    const prisma = getPrismaClient();
     const drug = await prisma.drug.findUnique({
       where: { id },
     });
@@ -123,6 +125,7 @@ export class DrugService {
   }
 
   static async deleteDrug(id: string) {
+    const prisma = getPrismaClient();
     const drug = await prisma.drug.findUnique({
       where: { id },
     });

@@ -1,11 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
 import { AuthService } from './auth.service';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export class UserService {
   static async getAllUsers(page: number, limit: number, role?: string, warehouseId?: string) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where: any = { isActive: true };
@@ -41,6 +40,7 @@ export class UserService {
   }
 
   static async getUserById(id: string) {
+    const prisma = getPrismaClient();
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
@@ -69,6 +69,7 @@ export class UserService {
     role: string,
     warehouseId?: string,
   ) {
+    const prisma = getPrismaClient();
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -103,6 +104,7 @@ export class UserService {
   }
 
   static async updateUser(id: string, data: any) {
+    const prisma = getPrismaClient();
     const user = await prisma.user.findUnique({
       where: { id },
     });
@@ -135,6 +137,7 @@ export class UserService {
   }
 
   static async deleteUser(id: string) {
+    const prisma = getPrismaClient();
     const user = await prisma.user.findUnique({
       where: { id },
     });
@@ -151,3 +154,4 @@ export class UserService {
     return { message: 'User deleted successfully' };
   }
 }
+

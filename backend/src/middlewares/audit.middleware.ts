@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthRequest } from './auth.middleware';
-import { PrismaClient } from '@prisma/client';
 import logger from '../utils/logger';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export const auditLog = (entityType: string) =>
   async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -11,6 +9,7 @@ export const auditLog = (entityType: string) =>
 
     res.json = function (body: any) {
       if (res.statusCode < 400 && req.user) {
+        const prisma = getPrismaClient();
         prisma.auditLog
           .create({
             data: {

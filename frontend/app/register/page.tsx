@@ -1,242 +1,215 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Card, Select } from '@/components/ui';
+import { Button, Card, Alert, Input } from '@/components/ui/index';
 import { useAuth } from '@/lib/auth-context';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register, isLoading, error, clearError } = useAuth();
-  const [formData, setFormData] = React.useState({
+  const { register, isLoading, error, clearError, isAuthenticated } = useAuth();
+
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'officer',
-    warehouse: 'main',
+    role: 'WAREHOUSE_STAFF',
   });
-  const [localError, setLocalError] = React.useState('');
-  const [success, setSuccess] = React.useState(false);
 
-  React.useEffect(() => {
-    clearError();
-  }, [clearError]);
+  const [localError, setLocalError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLocalError('');
-    setSuccess(false);
-
-    // Validation
+  const validateForm = () => {
     if (
       !formData.name ||
       !formData.email ||
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setLocalError('Please fill in all fields');
-      return;
+      setLocalError('All fields are required');
+      return false;
     }
 
-    if (!formData.email.includes('@')) {
+    if (formData.name.length < 3) {
+      setLocalError('Name must be at least 3 characters');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
       setLocalError('Please enter a valid email address');
-      return;
+      return false;
     }
 
     if (formData.password.length < 8) {
       setLocalError('Password must be at least 8 characters');
-      return;
+      return false;
+    }
+
+    if (!/(?=.*[A-Z])(?=.*[0-9])/.test(formData.password)) {
+      setLocalError('Password must contain uppercase letter and number');
+      return false;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setLocalError('Passwords do not match');
-      return;
+      return false;
     }
+
+    if (!agreeTerms) {
+      setLocalError('You must agree to the terms');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError('');
+    clearError();
+
+    if (!validateForm()) return;
 
     try {
       await register(
         formData.name,
         formData.email,
         formData.password,
-        formData.role,
-        formData.warehouse === 'main' ? undefined : formData.warehouse,
+        formData.role
       );
+
       setSuccess(true);
-      // Redirect to dashboard after successful registration
+
       setTimeout(() => {
         router.push('/dashboard');
       }, 1500);
     } catch (err) {
-      setLocalError(error || 'Registration failed');
+      const errorMessage =
+        err instanceof Error ? err.message : error || 'Registration failed';
+      setLocalError(errorMessage);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-bg via-bg-secondary to-bg p-4">
       <div className="w-full max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600 mb-2">
-            💊
-          </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">PharmaStock</h1>
-          <p className="text-text-secondary">
-            Create your account to get started
-          </p>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold">PharmaStock</h1>
+          <p className="text-text-secondary">Create your account</p>
         </div>
 
-        {/* Register Card */}
-        <Card className="p-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-text-primary mb-1">Create Account</h2>
-          <p className="text-text-secondary text-sm mb-6">
-            Join our warehouse management system
-          </p>
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4">Sign Up</h2>
 
           {success && (
-            <div className="p-4 bg-success-50 border border-success-200 rounded-lg mb-6">
-              <p className="text-sm text-success-700 font-medium">
-                ✓ Registration successful! Redirecting to login...
-              </p>
-            </div>
+            <Alert type="success" title="Success">
+              Account created! Redirecting...
+            </Alert>
+          )}
+
+          {(localError || error) && (
+            <Alert type="danger" title="Error">
+              {localError || error}
+            </Alert>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name */}
             <Input
-              label="Full Name"
-              placeholder="John Doe"
               name="name"
+              placeholder="Full Name"
               value={formData.name}
               onChange={handleChange}
-              required
             />
 
-            {/* Email */}
             <Input
-              label="Email Address"
-              type="email"
-              placeholder="john@pharmastock.com"
               name="email"
+              type="email"
+              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              required
             />
 
-            {/* Password */}
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+            <div className="relative">
+              <Input
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
 
-            {/* Confirm Password */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2 text-sm"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+
             <Input
-              label="Confirm Password"
-              type="password"
-              placeholder="••••••••"
               name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              required
             />
 
-            {/* Role Selection */}
-            <Select
-              label="Role"
+            <select
               name="role"
-              options={[
-                { value: 'officer', label: 'Store Officer' },
-                { value: 'manager', label: 'Pharmacy Manager' },
-                { value: 'inspector', label: 'Inspector' },
-              ]}
               value={formData.role}
               onChange={handleChange}
-            />
+              className="w-full p-2 border rounded"
+            >
+              <option value="WAREHOUSE_STAFF">Warehouse Staff</option>
+              <option value="PHARMACIST">Pharmacist</option>
+              <option value="INSPECTOR">Inspector</option>
+            </select>
 
-            {/* Warehouse Selection */}
-            <Select
-              label="Assigned Warehouse"
-              name="warehouse"
-              options={[
-                { value: 'main', label: 'Main Warehouse' },
-                { value: 'storage-a', label: 'Storage A' },
-                { value: 'storage-b', label: 'Storage B' },
-              ]}
-              value={formData.warehouse}
-              onChange={handleChange}
-            />
-
-            {/* Error Message */}
-            {(localError || error) && (
-              <div className="p-3 bg-danger-50 border border-danger-200 rounded-lg">
-                <p className="text-sm text-danger-700">{localError || error}</p>
-              </div>
-            )}
-
-            {/* Terms and Conditions */}
-            <label className="flex items-start gap-2 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-border cursor-pointer mt-1"
-                required
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
               />
-              <span className="text-xs text-text-secondary">
-                I agree to the{' '}
-                <Link href="#" className="text-primary-600 hover:underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="#" className="text-primary-600 hover:underline">
-                  Privacy Policy
-                </Link>
-              </span>
+              I agree to Terms & Privacy Policy
             </label>
 
-            {/* Submit Button */}
             <Button
-              variant="primary"
               type="submit"
-              isLoading={isLoading}
-              className="w-full mt-6"
+              disabled={isLoading || !agreeTerms}
+              className="w-full"
             >
-              {isLoading ? 'Creating account...' : 'Create Account'}
+              {isLoading ? 'Creating...' : 'Create Account'}
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-border"></div>
-            <span className="text-text-muted text-xs">OR</span>
-            <div className="flex-1 h-px bg-border"></div>
-          </div>
-
-          {/* Sign In Link */}
-          <p className="text-center text-sm text-text-secondary">
+          <p className="text-center text-sm mt-4">
             Already have an account?{' '}
-            <Link
-              href="/login"
-              className="text-primary-600 hover:text-primary-700 font-medium"
-            >
-              Sign in here
+            <Link href="/login" className="text-primary">
+              Login
             </Link>
           </p>
         </Card>
-
-        {/* Footer */}
-        <div className="mt-8 text-center text-xs text-text-muted">
-          <p>© 2024 PharmaStock. All rights reserved.</p>
-        </div>
       </div>
     </div>
   );

@@ -142,7 +142,7 @@ export default function AuditPage() {
       header={
         <div className="flex items-center justify-between px-8 py-4">
           <h1 className="text-xl font-bold text-text-primary">PharmaStock</h1>
-          <Badge variant="accent">Inspector Only</Badge>
+          <Badge variant="warning">Inspector Only</Badge>
         </div>
       }
     >

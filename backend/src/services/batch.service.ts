@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export class BatchService {
   static async getAllBatches(
@@ -13,6 +11,7 @@ export class BatchService {
     expiryBefore?: Date,
     expiryAfter?: Date,
   ) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -49,6 +48,7 @@ export class BatchService {
   }
 
   static async getBatchById(id: string) {
+    const prisma = getPrismaClient();
     const batch = await prisma.batch.findUnique({
       where: { id },
       include: {
@@ -75,6 +75,7 @@ export class BatchService {
     warehouseId: string,
     importedById?: string,
   ) {
+    const prisma = getPrismaClient();
     // Verify drug and warehouse exist
     const [drug, warehouse] = await Promise.all([
       prisma.drug.findUnique({ where: { id: drugId } }),
@@ -115,6 +116,7 @@ export class BatchService {
   }
 
   static async updateBatchStatus(id: string, status: string) {
+    const prisma = getPrismaClient();
     const batch = await prisma.batch.findUnique({
       where: { id },
     });
@@ -137,6 +139,7 @@ export class BatchService {
     dispatchedById: string,
     prescriptionRef?: string,
   ) {
+    const prisma = getPrismaClient();
     const batch = await prisma.batch.findUnique({
       where: { id: batchId },
     });
@@ -167,6 +170,7 @@ export class BatchService {
   }
 
   static async scanBatch(barcode: string) {
+    const prisma = getPrismaClient();
     // For now, treat barcode as batch number
     const batch = await prisma.batch.findUnique({
       where: { batchNo: barcode },
@@ -182,6 +186,7 @@ export class BatchService {
   }
 
   static async deleteBatch(id: string) {
+    const prisma = getPrismaClient();
     const batch = await prisma.batch.findUnique({
       where: { id },
     });

@@ -1,14 +1,10 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { PrismaClient } from '@prisma/client';
 import { getEnv } from '../config/env';
 import { ApiError } from '../utils/ApiError';
-import Redis from 'ioredis';
-
-const prisma = new PrismaClient();
-const env = getEnv();
-
-const redis = new Redis(env.REDIS_URL);
+import { getPrismaClient } from '../lib/database';
+import { getRedisClient } from '../lib/redis';
+import logger from '../utils/logger';
 
 export interface TokenPayload {
   id: string;
@@ -19,6 +15,7 @@ export interface TokenPayload {
 
 export class AuthService {
   static async hashPassword(password: string): Promise<string> {
+    const env = getEnv();
     return bcrypt.hash(password, env.BCRYPT_ROUNDS);
   }
 
@@ -27,32 +24,55 @@ export class AuthService {
   }
 
   static generateAccessToken(payload: TokenPayload): string {
+    const env = getEnv();
     return jwt.sign(payload, env.JWT_ACCESS_SECRET as string, {
       expiresIn: env.JWT_ACCESS_EXPIRES_IN as string,
     } as any);
   }
 
   static generateRefreshToken(payload: TokenPayload): string {
+    const env = getEnv();
     return jwt.sign(payload, env.JWT_REFRESH_SECRET as string, {
       expiresIn: env.JWT_REFRESH_EXPIRES_IN as string,
     } as any);
   }
 
   static async storeRefreshToken(userId: string, token: string): Promise<void> {
-    const refreshDuration = 7 * 24 * 60 * 60; // 7 days in seconds
-    await redis.setex(`refresh:${userId}`, refreshDuration, token);
+    try {
+      const redis = getRedisClient();
+      const refreshDuration = 7 * 24 * 60 * 60; // 7 days in seconds
+      await redis.setex(`refresh:${userId}`, refreshDuration, token);
+    } catch (error) {
+      logger.warn('Failed to store refresh token in Redis', error);
+    }
   }
 
   static async getRefreshToken(userId: string): Promise<string | null> {
-    return redis.get(`refresh:${userId}`);
+    try {
+      const redis = getRedisClient();
+      return await redis.get(`refresh:${userId}`);
+    } catch (error) {
+      logger.warn('Failed to get refresh token from Redis', error);
+      return null;
+    }
   }
 
   static async deleteRefreshToken(userId: string): Promise<void> {
-    await redis.del(`refresh:${userId}`);
+    try {
+      const redis = getRedisClient();
+      await redis.del(`refresh:${userId}`);
+    } catch (error) {
+      logger.warn('Failed to delete refresh token from Redis', error);
+    }
   }
 
   static async deleteAllRefreshTokens(userId: string): Promise<void> {
-    await redis.del(`refresh:${userId}`);
+    try {
+      const redis = getRedisClient();
+      await redis.del(`refresh:${userId}`);
+    } catch (error) {
+      logger.warn('Failed to delete all refresh tokens from Redis', error);
+    }
   }
 
   static async register(
@@ -69,6 +89,8 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
+    const prisma = getPrismaClient();
+
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -120,6 +142,8 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
+    const prisma = getPrismaClient();
+
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -157,6 +181,7 @@ export class AuthService {
   }
 
   static async refreshAccessToken(userId: string, refreshToken: string): Promise<string> {
+    const prisma = getPrismaClient();
     const storedToken = await this.getRefreshToken(userId);
 
     if (!storedToken || storedToken !== refreshToken) {
@@ -191,6 +216,8 @@ export class AuthService {
     currentPassword: string,
     newPassword: string,
   ): Promise<void> {
+    const prisma = getPrismaClient();
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -216,3 +243,4 @@ export class AuthService {
     await this.deleteAllRefreshTokens(userId);
   }
 }
+

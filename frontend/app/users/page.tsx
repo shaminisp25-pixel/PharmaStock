@@ -8,6 +8,8 @@ export default function UsersPage() {
   const [showAddModal, setShowAddModal] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [editingUser, setEditingUser] = React.useState<number | null>(null);
+  const [newUserRole, setNewUserRole] = React.useState('officer');
+  const [newUserWarehouse, setNewUserWarehouse] = React.useState('main');
 
   const users = [
     {
@@ -62,7 +64,7 @@ export default function UsersPage() {
       admin: 'danger',
       manager: 'primary',
       officer: 'secondary',
-      inspector: 'accent',
+      inspector: 'secondary',
     };
     return colors[role] || 'secondary';
   };
@@ -172,7 +174,7 @@ export default function UsersPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary">{user.email}</td>
                   <td className="px-6 py-4 text-sm">
-                    <Badge variant={getRoleColor(user.role)}>
+                    <Badge variant={getRoleColor(user.role) as 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'default' | 'info'}>
                       {user.role.toUpperCase()}
                     </Badge>
                   </td>
@@ -222,7 +224,7 @@ export default function UsersPage() {
             {
               role: 'Inspector',
               permissions: ['View all data', 'Audit logs', 'Reports', 'No edit access'],
-              color: 'accent',
+              color: 'secondary',
             },
           ].map((item, idx) => (
             <Card key={idx} className="p-6">
@@ -244,12 +246,11 @@ export default function UsersPage() {
       </Section>
 
       {/* Add User Modal */}
-      {showAddModal && (
-        <Modal
-          title="Add New User"
-          subtitle="Create a new team member account"
-          onClose={() => setShowAddModal(false)}
-        >
+      <Modal
+        isOpen={showAddModal}
+        title="Add New User"
+        onClose={() => setShowAddModal(false)}
+      >
           <div className="space-y-4 mb-6">
             <Input label="Full Name" placeholder="Enter full name" />
             <Input label="Email" type="email" placeholder="Enter email address" />
@@ -260,6 +261,8 @@ export default function UsersPage() {
                 { value: 'manager', label: 'Manager' },
                 { value: 'inspector', label: 'Inspector' },
               ]}
+              value={newUserRole}
+              onChange={(e) => setNewUserRole(e.target.value)}
             />
             <Select
               label="Warehouse"
@@ -268,6 +271,8 @@ export default function UsersPage() {
                 { value: 'storage-a', label: 'Storage A' },
                 { value: 'storage-b', label: 'Storage B' },
               ]}
+              value={newUserWarehouse}
+              onChange={(e) => setNewUserWarehouse(e.target.value)}
             />
           </div>
           <div className="flex gap-3">
@@ -277,7 +282,6 @@ export default function UsersPage() {
             </Button>
           </div>
         </Modal>
-      )}
     </AppLayout>
   );
 }

@@ -58,7 +58,7 @@ export default function ImportPage() {
         title="Import Drugs"
         subtitle="Upload and manage bulk drug inventory"
         actions={
-          <Button variant="outline" size="sm" href="/import/template">
+          <Button variant="outline">
             📥 Download Template
           </Button>
         }

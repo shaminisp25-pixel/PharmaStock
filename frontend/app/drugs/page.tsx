@@ -8,6 +8,7 @@ import { DrugService, Paginated, Drug } from '@/lib/api-services';
 
 export default function DrugsPage() {
   const user = useRequireAuth();
+  if (!user) return null;
   const [drugs, setDrugs] = useState<Drug[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export default function DrugsPage() {
     temperature: '',
   });
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     const fetchDrugs = async () => {
@@ -24,6 +26,7 @@ export default function DrugsPage() {
         setIsLoading(true);
         const data = await DrugService.getAll(page, 10, searchTerm);
         setDrugs(data?.data || []);
+        setTotal(data?.total || 0);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load drugs');
       } finally {
@@ -77,12 +80,12 @@ export default function DrugsPage() {
               { value: 'antibiotic', label: 'Antibiotic' },
               { value: 'anti-inflammatory', label: 'Anti-inflammatory' },
             ]}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={filters.category}
+            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
           />
           <Button variant="outline" onClick={() => {
             setSearchTerm('');
-            setCategory('');
+            setFilters({ category: '', temperature: '' });
             setPage(1);
           }}>Clear Filters</Button>
         </div>
@@ -146,7 +149,7 @@ export default function DrugsPage() {
         <Section>
           <div className="flex items-center justify-between">
             <p className="text-sm text-text-secondary">
-              Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, total)} of {total} drugs
+              Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, drugs.length)} of {drugs.length} drugs
             </p>
             <div className="space-x-2">
               <Button

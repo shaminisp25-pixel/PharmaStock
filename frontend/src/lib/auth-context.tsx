@@ -238,18 +238,20 @@ export const useHasRole = (requiredRoles: string | string[]): boolean => {
 
 /**
  * Hook to require authentication
+ * Redirects to /login if user is not authenticated
  */
-export const useRequireAuth = (): User => {
+export const useRequireAuth = (): User | null => {
   const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && typeof window !== 'undefined') {
       window.location.href = '/login';
     }
   }, [isAuthenticated]);
 
-  if (!user) {
-    throw new Error('User not authenticated');
+  // Return null while redirecting or until user is loaded
+  if (!isAuthenticated || !user) {
+    return null;
   }
 
   return user;

@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export class AlertService {
   static async getAllAlerts(
@@ -11,6 +9,7 @@ export class AlertService {
     resolved?: boolean,
     warehouseId?: string,
   ) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -44,6 +43,7 @@ export class AlertService {
   }
 
   static async getAlertById(id: string) {
+    const prisma = getPrismaClient();
     const alert = await prisma.alert.findUnique({
       where: { id },
       include: {
@@ -61,6 +61,7 @@ export class AlertService {
   }
 
   static async resolveAlert(id: string) {
+    const prisma = getPrismaClient();
     const alert = await prisma.alert.findUnique({
       where: { id },
     });
@@ -84,6 +85,7 @@ export class AlertService {
   }
 
   static async createAlert(batchId: string, alertType: string) {
+    const prisma = getPrismaClient();
     const batch = await prisma.batch.findUnique({
       where: { id: batchId },
     });
@@ -114,6 +116,7 @@ export class AuditService {
     dateFrom?: Date,
     dateTo?: Date,
   ) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where: any = {};
@@ -154,6 +157,7 @@ export class ImportService {
     limit: number,
     uploadedById?: string,
   ) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const where = uploadedById ? { uploadedById } : {};
@@ -180,6 +184,7 @@ export class ImportService {
   }
 
   static async getImportLogById(id: string) {
+    const prisma = getPrismaClient();
     const log = await prisma.importLog.findUnique({
       where: { id },
       include: {
@@ -202,6 +207,7 @@ export class ImportService {
     errors: any[],
     uploadedById: string,
   ) {
+    const prisma = getPrismaClient();
     const log = await prisma.importLog.create({
       data: {
         filename,

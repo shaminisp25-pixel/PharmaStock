@@ -1,15 +1,14 @@
 import cron from 'node-cron';
-import { PrismaClient } from '@prisma/client';
 import logger from '../utils/logger';
 import { getEnv } from '../config/env';
-
-const prisma = new PrismaClient();
-const env = getEnv();
+import { getPrismaClient } from '../lib/database';
 
 export function startExpiryCheckJob() {
   // Runs daily at 00:05
   cron.schedule('5 0 * * *', async () => {
     try {
+      const env = getEnv();
+      const prisma = getPrismaClient();
       logger.info('Starting expiry check job...');
 
       const now = new Date();

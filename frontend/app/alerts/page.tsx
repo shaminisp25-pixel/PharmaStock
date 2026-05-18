@@ -8,6 +8,7 @@ import { AlertService, Alert } from '@/lib/api-services';
 
 export default function AlertsPage() {
   const user = useRequireAuth();
+  if (!user) return null;
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function AlertsPage() {
   });
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [resolving, setResolving] = useState<string | null>(null);
 
   useEffect(() => {
     const loadAlerts = async () => {
@@ -44,59 +46,6 @@ export default function AlertsPage() {
     loadAlerts();
   }, [page, filters]);
 
-  const alerts = [
-    {
-      id: 1,
-      title: 'High Expiry Rate Detected',
-      message: '15 drugs expiring within 30 days',
-      type: 'expiry',
-      severity: 'critical',
-      warehouse: 'Main',
-      timestamp: '2 hours ago',
-      actions: ['View Drugs', 'Plan Dispatch'],
-    },
-    {
-      id: 2,
-      title: 'Stock Below Threshold',
-      message: 'Paracetamol stock at 5% capacity',
-      type: 'stock',
-      severity: 'warning',
-      warehouse: 'Storage A',
-      timestamp: '4 hours ago',
-      actions: ['Reorder', 'View Details'],
-    },
-    {
-      id: 3,
-      title: 'Temperature Deviation',
-      message: 'Cold storage unit temperature fluctuation detected',
-      type: 'temperature',
-      severity: 'warning',
-      warehouse: 'Main',
-      timestamp: '6 hours ago',
-      actions: ['Check Equipment', 'Investigate'],
-    },
-    {
-      id: 4,
-      title: 'Batch Dispatch Completed',
-      message: 'Batch #BT-2024-0542 dispatched successfully',
-      type: 'dispatch',
-      severity: 'info',
-      warehouse: 'Storage A',
-      timestamp: '1 day ago',
-      actions: ['View Invoice'],
-    },
-    {
-      id: 5,
-      title: 'Import Validation Error',
-      message: '3 rows failed validation in import #IMP-0089',
-      type: 'import',
-      severity: 'error',
-      warehouse: 'Main',
-      timestamp: '2 days ago',
-      actions: ['Review Errors', 'Retry'],
-    },
-  ];
-
   const getSeverityColor = (severity: string) => {
     const colors: Record<string, string> = {
       critical: 'danger',
@@ -117,7 +66,7 @@ export default function AlertsPage() {
     return icons[severity] || 'ℹ️';
   };
 
-  const handleResolve = (id: number) => {
+  const handleResolve = (id: string) => {
     setResolving(id);
     setTimeout(() => setResolving(null), 500);
   };
@@ -151,10 +100,10 @@ export default function AlertsPage() {
       <Section title="Quick Stats">
         <div className="grid grid-cols-4 gap-4">
           {[
-            { label: 'Critical', count: 1, color: 'danger' },
-            { label: 'Errors', count: 1, color: 'danger' },
-            { label: 'Warnings', count: 2, color: 'warning' },
-            { label: 'Info', count: 1, color: 'secondary' },
+            { label: 'Critical', count: stats.critical, color: 'danger' },
+            { label: 'Errors', count: stats.error, color: 'danger' },
+            { label: 'Warnings', count: stats.warning, color: 'warning' },
+            { label: 'Info', count: stats.info, color: 'secondary' },
           ].map((stat, idx) => (
             <Card key={idx} className="p-4 text-center">
               <div className={`text-3xl font-bold text-${stat.color}-500 mb-2`}>
@@ -230,7 +179,7 @@ export default function AlertsPage() {
                       <h3 className="font-semibold text-text-primary">
                         {alert.title}
                       </h3>
-                      <Badge variant={getSeverityColor(alert.severity)}>
+                      <Badge variant={getSeverityColor(alert.severity) as 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'default' | 'info'}>
                         {alert.severity.toUpperCase()}
                       </Badge>
                     </div>
@@ -238,8 +187,7 @@ export default function AlertsPage() {
                       {alert.message}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-text-muted">
-                      <span>📍 {alert.warehouse}</span>
-                      <span>⏱️ {alert.timestamp}</span>
+                      <span>⏱️ {new Date(alert.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
@@ -247,22 +195,11 @@ export default function AlertsPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
-                {alert.actions.map((action, idx) => (
-                  <Button
-                    key={idx}
-                    variant={idx === 0 ? 'primary' : 'outline'}
-                    size="sm"
-                    onClick={() => handleResolve(alert.id)}
-                    isLoading={resolving === alert.id}
-                  >
-                    {action}
-                  </Button>
-                ))}
                 <Button
-                  variant="ghost"
+                  variant="primary"
                   size="sm"
-                  className="ml-auto"
                   onClick={() => handleResolve(alert.id)}
+                  isLoading={resolving === alert.id}
                 >
                   ✓ Resolve
                 </Button>

@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
-
-const prisma = new PrismaClient();
+import { getPrismaClient } from '../lib/database';
 
 export class WarehouseService {
   static async getAllWarehouses(page: number, limit: number) {
+    const prisma = getPrismaClient();
     const skip = (page - 1) * limit;
 
     const [warehouses, total] = await Promise.all([
@@ -30,6 +29,7 @@ export class WarehouseService {
   }
 
   static async getWarehouseById(id: string) {
+    const prisma = getPrismaClient();
     const warehouse = await prisma.warehouse.findUnique({
       where: { id },
       include: {
@@ -55,6 +55,7 @@ export class WarehouseService {
     tempMin: number,
     tempMax: number,
   ) {
+    const prisma = getPrismaClient();
     if (tempMin >= tempMax) {
       throw new ApiError(400, 'Min temperature must be less than max temperature');
     }
@@ -72,6 +73,7 @@ export class WarehouseService {
   }
 
   static async updateWarehouse(id: string, data: any) {
+    const prisma = getPrismaClient();
     const warehouse = await prisma.warehouse.findUnique({
       where: { id },
     });
@@ -98,6 +100,7 @@ export class WarehouseService {
   }
 
   static async deleteWarehouse(id: string) {
+    const prisma = getPrismaClient();
     const warehouse = await prisma.warehouse.findUnique({
       where: { id },
     });

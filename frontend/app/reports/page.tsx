@@ -7,6 +7,8 @@ import { AppLayout, PageHeader, Section, Sidebar, SidebarItem } from '@/componen
 export default function ReportsPage() {
   const [reportType, setReportType] = React.useState('expiry');
   const [isExporting, setIsExporting] = React.useState(false);
+  const [dateRange, setDateRange] = React.useState('30days');
+  const [warehouse, setWarehouse] = React.useState('all');
 
   const reports = [
     {
@@ -116,6 +118,8 @@ export default function ReportsPage() {
                 { value: '90days', label: 'Last 90 days' },
                 { value: 'custom', label: 'Custom' },
               ]}
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value)}
             />
             <Select
               label="Warehouse"
@@ -124,6 +128,8 @@ export default function ReportsPage() {
                 { value: 'main', label: 'Main' },
                 { value: 'storage-a', label: 'Storage A' },
               ]}
+              value={warehouse}
+              onChange={(e) => setWarehouse(e.target.value)}
             />
           </div>
           <div className="mt-6 flex gap-3">

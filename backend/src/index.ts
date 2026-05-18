@@ -1,27 +1,41 @@
 import 'dotenv/config';
 import { initEnv, getEnv } from './config/env';
 import { createApp } from './app';
-import { PrismaClient } from '@prisma/client';
-import logger from './utils/logger';
+import { connectDatabase, disconnectDatabase } from './lib/database';
+import { connectRedis, disconnectRedis } from './lib/redis';
+import { initializeDatabase } from './lib/initializeDb';
+import logger, { configureLogger } from './utils/logger';
 import { startExpiryCheckJob } from './jobs/expiryCheck.job';
-
-const prisma = new PrismaClient();
 
 async function main() {
   try {
     // Initialize environment
     initEnv();
+    configureLogger();
     const env = getEnv();
 
-    // Test database connection
-    await prisma.$connect();
-    logger.info('✓ Database connected successfully');
+    // Connect to database
+    await connectDatabase();
+
+    // Initialize database schema
+    await initializeDatabase();
+
+    // Connect to Redis
+    try {
+      await connectRedis();
+    } catch (error) {
+      logger.warn('Redis not available, running without caching');
+    }
 
     // Create Express app
     const app = createApp();
 
     // Start expiry check job
-    startExpiryCheckJob();
+    try {
+      startExpiryCheckJob();
+    } catch (error) {
+      logger.warn('Expiry check job failed to start', error);
+    }
 
     // Start server
     const PORT = env.PORT;
@@ -39,13 +53,15 @@ async function main() {
     // Graceful shutdown
     process.on('SIGINT', async () => {
       logger.info('Shutting down gracefully...');
-      await prisma.$disconnect();
+      await disconnectDatabase();
+      await disconnectRedis();
       process.exit(0);
     });
 
     process.on('SIGTERM', async () => {
       logger.info('SIGTERM signal received: closing HTTP server');
-      await prisma.$disconnect();
+      await disconnectDatabase();
+      await disconnectRedis();
       process.exit(0);
     });
   } catch (error) {
@@ -55,3 +71,5 @@ async function main() {
 }
 
 main();
+
+
