@@ -231,4 +231,93 @@ router.patch(
   AuthController.changePassword,
 );
 
+/**
+ * @swagger
+ * /auth/admin/create-user:
+ *   post:
+ *     summary: Create a new user (Admin only)
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *               - role
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [admin, pharmacist, warehouse_staff, inspector]
+ *               warehouseId:
+ *                 type: string
+ *                 description: Required for warehouse_staff role
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       401:
+ *         description: Unauthorized - must be admin
+ *       409:
+ *         description: User already exists
+ */
+router.post(
+  '/admin/create-user',
+  authMiddleware,
+  AuthController.createUser,
+);
+
+/**
+ * @swagger
+ * /auth/admin/create-super-admin:
+ *   post:
+ *     summary: Create a super admin user (Admin only)
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *               name:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Super admin created successfully
+ *       401:
+ *         description: Unauthorized - must be admin
+ */
+router.post(
+  '/admin/create-super-admin',
+  authMiddleware,
+  AuthController.createSuperAdmin,
+);
+
 export default router;

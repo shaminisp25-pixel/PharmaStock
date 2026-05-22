@@ -155,3 +155,29 @@ export interface AlertFilters extends PaginationParams {
   resolved?: boolean;
   warehouseId?: string;
 }
+
+// Integration types
+export interface ERPSyncRequest {
+  syncType: 'INVENTORY' | 'ORDERS' | 'BATCHES';
+  data: Record<string, any>;
+}
+
+export interface PrescriptionVerifyRequest {
+  prescriptionId: string;
+  patientId: string;
+  medicineIds: string[];
+}
+
+export interface ERPSyncResponse {
+  syncId: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  startTime: string;
+  endTime?: string;
+  message: string;
+}
+
+export interface PrescriptionVerifyResponse {
+  verified: boolean;
+  issues?: string[];
+  validUntil: string;
+}

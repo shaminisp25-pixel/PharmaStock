@@ -1,0 +1,7 @@
+{
+  "timestamp": "2026-05-22T07:25:08.227Z",
+  "connectionStatus": "FAILED",
+  "summary": {},
+  "details": {},
+  "error": "\nInvalid `prisma.auditLog.findMany()` invocation:\n\n\nThe column `audit_logs.changes` does not exist in the current database."
+}

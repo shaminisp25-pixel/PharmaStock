@@ -18,6 +18,7 @@ import {
   ChevronDown,
   Menu,
   LogOut,
+  Zap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store';
@@ -29,6 +30,7 @@ const navigation = [
   { name: 'Dispatch', href: '/dispatch', icon: Truck },
   { name: 'Alerts', href: '/alerts', icon: AlertCircle },
   { name: 'Reports', href: '/reports', icon: FileText },
+  { name: 'Integration', href: '/integration', icon: Zap },
   { name: 'Users', href: '/users', icon: Users },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

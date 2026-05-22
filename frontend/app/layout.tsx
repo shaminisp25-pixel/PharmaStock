@@ -7,6 +7,7 @@ import { queryClient } from '@/lib/queryClient';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import './globals.css';
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,6 +21,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
+    <Toaster richColors position="top-right" />
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
             {children}

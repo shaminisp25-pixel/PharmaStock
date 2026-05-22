@@ -12,6 +12,8 @@
     "prisma:studio": "prisma studio",
     "seed": "ts-node prisma/seed.ts",
     "db:seed": "prisma db seed",
+    "db:report": "ts-node scripts/dbReport.ts",
+    "user:create": "ts-node scripts/userManagement.ts",
     "lint": "eslint src/**/*.ts",
     "test": "jest",
     "test:watch": "jest --watch"

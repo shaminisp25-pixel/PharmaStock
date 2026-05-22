@@ -148,6 +148,7 @@ model AuditLog {
   action      String
   entityType  String   @map("entity_type")
   entityId    String   @map("entity_id")
+  changes     Json?    @default("{}")
   beforeState Json?    @map("before_state")
   afterState  Json?    @map("after_state")
   ipAddress   String?  @map("ip_address")

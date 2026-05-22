@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/apiClient';
+import { useDispatchRecords } from '@/services/reportHooks';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,20 +14,14 @@ export default function DispatchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
 
-  const { data: dispatches, isLoading } = useQuery({
-    queryKey: ['dispatch-records', page],
-    queryFn: async () => {
-      const response = await apiClient.get('/batches', {
-        params: { page, limit: 20, status: 'dispatched' },
-      });
-      return response.data;
-    },
-  });
+  const { data: response, isLoading } = useDispatchRecords({ page, limit: 20 });
 
-  const filteredRecords = dispatches?.data?.filter(
+  const dispatches = response?.data || [];
+  const filteredRecords = dispatches.filter(
     (record: any) =>
-      record.batchNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      record.drug?.name.toLowerCase().includes(searchQuery.toLowerCase())
+      record.batch?.batchNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      record.batch?.drug?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      record.destination.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
   return (
@@ -49,19 +42,26 @@ export default function DispatchPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">Total Dispatched</p>
-            <p className="text-2xl font-bold mt-2">{dispatches?.meta?.total || 0}</p>
+            <p className="text-2xl font-bold mt-2">{response?.meta?.total || 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">This Month</p>
-            <p className="text-2xl font-bold mt-2">1,245</p>
+            <p className="text-2xl font-bold mt-2">
+              {dispatches.filter((d: any) => {
+                const dispatchDate = new Date(d.dispatchedAt);
+                const now = new Date();
+                return dispatchDate.getMonth() === now.getMonth() &&
+                  dispatchDate.getFullYear() === now.getFullYear();
+              }).length}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Pending</p>
-            <p className="text-2xl font-bold mt-2 text-warning">23</p>
+            <p className="text-sm text-muted-foreground">Page</p>
+            <p className="text-2xl font-bold mt-2">{page} of {response?.meta?.totalPages || 1}</p>
           </CardContent>
         </Card>
       </div>
@@ -118,16 +118,16 @@ export default function DispatchPage() {
                 ) : (
                   filteredRecords.map((record: any) => (
                     <tr key={record.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                      <td className="py-3 px-4 font-mono text-foreground">{record.batchNo}</td>
+                      <td className="py-3 px-4 font-mono text-foreground">{record.batch?.batchNo || 'N/A'}</td>
                       <td className="py-3 px-4">
                         <div>
-                          <p className="font-medium text-foreground">{record.drug?.name}</p>
-                          <p className="text-xs text-muted-foreground">{record.drug?.manufacturer}</p>
+                          <p className="font-medium text-foreground">{record.batch?.drug?.name || 'N/A'}</p>
+                          <p className="text-xs text-muted-foreground">{record.batch?.drug?.manufacturer || 'N/A'}</p>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-foreground">{record.destination || 'N/A'}</td>
+                      <td className="py-3 px-4 text-foreground">{record.destination}</td>
                       <td className="py-3 px-4 text-muted-foreground">
-                        {format(new Date(record.dispatchedAt || record.importedAt), 'dd MMM yyyy')}
+                        {format(new Date(record.dispatchedAt), 'dd MMM yyyy')}
                       </td>
                       <td className="py-3 px-4 text-right">
                         <Button size="sm" variant="ghost" icon={<Truck className="w-4 h-4" />}>

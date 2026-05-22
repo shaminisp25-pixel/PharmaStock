@@ -1,0 +1,374 @@
+{
+  "timestamp": "2026-05-22T07:27:19.579Z",
+  "connectionStatus": "CONNECTED",
+  "summary": {
+    "Total Users": 6,
+    "Total Warehouses": 3,
+    "Total Drugs": 5,
+    "Total Batches": 5,
+    "Batch Status": {
+      "active": 4,
+      "dispatched": 0,
+      "expired": 1,
+      "quarantined": 0
+    },
+    "Total Dispatch Records": 2,
+    "Total Alerts": 3,
+    "Total Imports": 1,
+    "Audit Logs (Last 100)": 1
+  },
+  "details": {
+    "users": [
+      {
+        "id": "13b2cfb9-fc50-4542-bfee-f68afabaf218",
+        "name": "Admin User",
+        "email": "admin@pharmastock.com",
+        "role": "admin",
+        "warehouse": "None",
+        "isActive": true,
+        "createdAt": "2026-05-14T17:21:26.108Z",
+        "statistics": {
+          "importLogs": 0,
+          "dispatches": 0,
+          "auditLogs": 1
+        }
+      },
+      {
+        "id": "40308dc6-b6a3-4489-9090-34e97a20e0d0",
+        "name": "Dr. Sarah Pharmacist",
+        "email": "sarah@pharmastock.com",
+        "role": "pharmacist",
+        "warehouse": "None",
+        "isActive": true,
+        "createdAt": "2026-05-14T17:21:26.388Z",
+        "statistics": {
+          "importLogs": 1,
+          "dispatches": 0,
+          "auditLogs": 0
+        }
+      },
+      {
+        "id": "9be087ab-c5a3-410d-a69a-75c857c7a212",
+        "name": "Ahmed Warehouse Manager",
+        "email": "ahmed@pharmastock.com",
+        "role": "warehouse_staff",
+        "warehouse": "Main Warehouse - Dubai",
+        "isActive": true,
+        "createdAt": "2026-05-14T17:21:26.522Z",
+        "statistics": {
+          "importLogs": 0,
+          "dispatches": 1,
+          "auditLogs": 0
+        }
+      },
+      {
+        "id": "be12a2c2-163b-485f-a06a-d541d5ea1944",
+        "name": "Fatima Cold Storage Manager",
+        "email": "fatima@pharmastock.com",
+        "role": "warehouse_staff",
+        "warehouse": "Cold Storage - Sharjah",
+        "isActive": true,
+        "createdAt": "2026-05-14T17:21:26.758Z",
+        "statistics": {
+          "importLogs": 0,
+          "dispatches": 1,
+          "auditLogs": 0
+        }
+      },
+      {
+        "id": "424d1647-f8cf-4b82-b9fc-965711d5ce94",
+        "name": "Inspector Hassan",
+        "email": "hassan@pharmastock.com",
+        "role": "inspector",
+        "warehouse": "None",
+        "isActive": true,
+        "createdAt": "2026-05-14T17:21:26.882Z",
+        "statistics": {
+          "importLogs": 0,
+          "dispatches": 0,
+          "auditLogs": 0
+        }
+      },
+      {
+        "id": "b3914bd0-e6bb-46d1-9979-405ca23c907b",
+        "name": "test_admin",
+        "email": "testadmin@gmail.com",
+        "role": "admin",
+        "warehouse": "None",
+        "isActive": true,
+        "createdAt": "2026-05-22T07:26:27.671Z",
+        "statistics": {
+          "importLogs": 0,
+          "dispatches": 0,
+          "auditLogs": 0
+        }
+      }
+    ],
+    "warehouses": [
+      {
+        "id": "b999f3db-ec22-4257-8d9f-49e5ad7d0a52",
+        "name": "Main Warehouse - Dubai",
+        "location": "Dubai Industrial Area",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:25.083Z",
+        "statistics": {
+          "users": 1,
+          "batches": 3
+        }
+      },
+      {
+        "id": "39917370-42d5-4225-9222-5d21318ac5ad",
+        "name": "Cold Storage - Sharjah",
+        "location": "Sharjah Port",
+        "tempRange": "2°C - 8°C",
+        "createdAt": "2026-05-14T17:21:25.389Z",
+        "statistics": {
+          "users": 1,
+          "batches": 1
+        }
+      },
+      {
+        "id": "ecf28d8e-560c-435d-8690-18a100b6f645",
+        "name": "Secondary Hub - Abu Dhabi",
+        "location": "Abu Dhabi",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:25.522Z",
+        "statistics": {
+          "users": 0,
+          "batches": 1
+        }
+      }
+    ],
+    "drugs": [
+      {
+        "id": "2d91486e-91df-44a3-b47b-be89e37fd180",
+        "name": "Aspirin 500mg",
+        "manufacturer": "Bayer Healthcare",
+        "composition": "Acetylsalicylic Acid",
+        "category": "Pain Relief",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:27.071Z",
+        "statistics": {
+          "batches": 1
+        }
+      },
+      {
+        "id": "649e3c45-db30-43f0-88eb-a722640a5983",
+        "name": "Insulin 100IU",
+        "manufacturer": "Novo Nordisk",
+        "composition": "Human Insulin",
+        "category": "Diabetes",
+        "tempRange": "2°C - 8°C",
+        "createdAt": "2026-05-14T17:21:27.648Z",
+        "statistics": {
+          "batches": 1
+        }
+      },
+      {
+        "id": "0a80ff20-eff9-47e3-be57-a291d05c4a6d",
+        "name": "Amoxicillin 500mg",
+        "manufacturer": "GSK",
+        "composition": "Amoxicillin Trihydrate",
+        "category": "Antibiotics",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:27.786Z",
+        "statistics": {
+          "batches": 1
+        }
+      },
+      {
+        "id": "c1eed6e5-cfd7-47c4-ba73-f2f329fcc916",
+        "name": "Paracetamol 650mg",
+        "manufacturer": "Johnson & Johnson",
+        "composition": "Paracetamol",
+        "category": "Fever & Pain",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:27.916Z",
+        "statistics": {
+          "batches": 1
+        }
+      },
+      {
+        "id": "680b58f9-2c9e-4784-a926-0a691e7088f9",
+        "name": "Lisinopril 10mg",
+        "manufacturer": "Cipla",
+        "composition": "Lisinopril Dihydrate",
+        "category": "Cardiovascular",
+        "tempRange": "15°C - 25°C",
+        "createdAt": "2026-05-14T17:21:28.042Z",
+        "statistics": {
+          "batches": 1
+        }
+      }
+    ],
+    "batchStats": {
+      "active": 4,
+      "dispatched": 0,
+      "expired": 1,
+      "quarantined": 0
+    },
+    "batches": [
+      {
+        "id": "1a951832-866a-4ea4-8529-ce51d442db39",
+        "batchNo": "BATCH-LIS-2024-001",
+        "drug": "Lisinopril 10mg",
+        "quantity": 3500,
+        "status": "expired",
+        "warehouse": "Secondary Hub - Abu Dhabi",
+        "expiryDate": "2026-05-04T17:21:28.149Z",
+        "importedBy": "Ahmed Warehouse Manager",
+        "importedAt": "2026-05-14T17:21:29.306Z",
+        "daysUntilExpiry": -17,
+        "statistics": {
+          "dispatches": 0,
+          "alerts": 1
+        }
+      },
+      {
+        "id": "4a5a80b0-f091-44b0-9a00-d776cb21d6db",
+        "batchNo": "BATCH-PAR-2024-001",
+        "drug": "Paracetamol 650mg",
+        "quantity": 10000,
+        "status": "active",
+        "warehouse": "Main Warehouse - Dubai",
+        "expiryDate": "2026-06-13T17:21:28.149Z",
+        "importedBy": "Ahmed Warehouse Manager",
+        "importedAt": "2026-05-14T17:21:29.050Z",
+        "daysUntilExpiry": 23,
+        "statistics": {
+          "dispatches": 0,
+          "alerts": 1
+        }
+      },
+      {
+        "id": "b4d6abc5-73cf-4af2-be19-0f95c6a1b01e",
+        "batchNo": "BATCH-AMX-2024-001",
+        "drug": "Amoxicillin 500mg",
+        "quantity": 8000,
+        "status": "active",
+        "warehouse": "Main Warehouse - Dubai",
+        "expiryDate": "2026-08-12T17:21:28.149Z",
+        "importedBy": "Dr. Sarah Pharmacist",
+        "importedAt": "2026-05-14T17:21:28.890Z",
+        "daysUntilExpiry": 83,
+        "statistics": {
+          "dispatches": 0,
+          "alerts": 1
+        }
+      },
+      {
+        "id": "00416274-bf21-4ab6-8690-57f571db3580",
+        "batchNo": "BATCH-INS-2024-001",
+        "drug": "Insulin 100IU",
+        "quantity": 2000,
+        "status": "active",
+        "warehouse": "Cold Storage - Sharjah",
+        "expiryDate": "2026-11-10T17:21:28.149Z",
+        "importedBy": "Dr. Sarah Pharmacist",
+        "importedAt": "2026-05-14T17:21:28.730Z",
+        "daysUntilExpiry": 173,
+        "statistics": {
+          "dispatches": 1,
+          "alerts": 0
+        }
+      },
+      {
+        "id": "62cd3de8-9e7b-471e-a150-60a202281392",
+        "batchNo": "BATCH-ASP-2024-001",
+        "drug": "Aspirin 500mg",
+        "quantity": 5000,
+        "status": "active",
+        "warehouse": "Main Warehouse - Dubai",
+        "expiryDate": "2027-05-14T17:21:28.149Z",
+        "importedBy": "Dr. Sarah Pharmacist",
+        "importedAt": "2026-05-14T17:21:28.160Z",
+        "daysUntilExpiry": 358,
+        "statistics": {
+          "dispatches": 1,
+          "alerts": 0
+        }
+      }
+    ],
+    "dispatches": [
+      {
+        "id": "793d3487-b668-423f-8fad-b85c16ed531c",
+        "batchNo": "BATCH-INS-2024-001",
+        "drug": "Insulin 100IU",
+        "quantityDispatched": 100,
+        "destination": "Hospital B - Abu Dhabi",
+        "prescriptionRef": "RX-2024-002",
+        "dispatchedBy": "Fatima Cold Storage Manager",
+        "dispatchedAt": "2026-05-14T17:21:30.382Z"
+      },
+      {
+        "id": "ed0a78eb-a7e9-4c16-937e-e73d40e4ab5c",
+        "batchNo": "BATCH-ASP-2024-001",
+        "drug": "Aspirin 500mg",
+        "quantityDispatched": 500,
+        "destination": "Clinic A - Dubai",
+        "prescriptionRef": "RX-2024-001",
+        "dispatchedBy": "Ahmed Warehouse Manager",
+        "dispatchedAt": "2026-05-14T17:21:30.132Z"
+      }
+    ],
+    "alertStats": {
+      "near_expiry": 2,
+      "expired": 1,
+      "low_stock": 0,
+      "temp_breach": 0,
+      "resolved": 0,
+      "pending": 3
+    },
+    "alerts": [
+      {
+        "id": "5acf2dcb-b795-4d9b-a195-8f1ee4bd67af",
+        "alertType": "near_expiry",
+        "batchNo": "BATCH-AMX-2024-001",
+        "drug": "Amoxicillin 500mg",
+        "resolved": false,
+        "resolvedAt": "Pending",
+        "triggeredAt": "2026-05-14T17:21:29.437Z"
+      },
+      {
+        "id": "c399f7fd-78d6-4f7b-8928-62e7d1fe86f4",
+        "alertType": "near_expiry",
+        "batchNo": "BATCH-PAR-2024-001",
+        "drug": "Paracetamol 650mg",
+        "resolved": false,
+        "resolvedAt": "Pending",
+        "triggeredAt": "2026-05-14T17:21:29.829Z"
+      },
+      {
+        "id": "1b10312f-c2fd-4807-ac1f-cc1490fce155",
+        "alertType": "expired",
+        "batchNo": "BATCH-LIS-2024-001",
+        "drug": "Lisinopril 10mg",
+        "resolved": false,
+        "resolvedAt": "Pending",
+        "triggeredAt": "2026-05-14T17:21:29.963Z"
+      }
+    ],
+    "importLogs": [
+      {
+        "id": "a32b5112-a80c-4371-bbd8-8560b61a059b",
+        "filename": "drugs_batch_2024_05.csv",
+        "totalRows": 150,
+        "successRows": 148,
+        "failedRows": 2,
+        "successRate": "98.67%",
+        "uploadedBy": "Dr. Sarah Pharmacist",
+        "uploadedAt": "2026-05-14T17:21:30.768Z"
+      }
+    ],
+    "auditLogs": [
+      {
+        "id": "d813c1a1-2c3d-466b-8766-fe5e2bfb8deb",
+        "user": "Admin User",
+        "action": "CREATE",
+        "entityType": "Batch",
+        "entityId": "62cd3de8-9e7b-471e-a150-60a202281392",
+        "createdAt": "2026-05-14T17:21:30.519Z"
+      }
+    ]
+  }
+}

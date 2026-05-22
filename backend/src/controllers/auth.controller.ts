@@ -113,4 +113,84 @@ export class AuthController {
       next(error);
     }
   }
+
+  static async createUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const authReq = req as AuthRequest;
+
+      // Check if user is admin
+      if (!authReq.user || authReq.user.role !== 'admin') {
+        throw new ApiError(403, 'Only admins can create users');
+      }
+
+      const { name, email, password, role, warehouseId } = req.body;
+
+      // Validate input
+      if (!name || !email || !password || !role) {
+        throw new ApiError(400, 'Missing required fields: name, email, password, role');
+      }
+
+      if (password.length < 8) {
+        throw new ApiError(400, 'Password must be at least 8 characters');
+      }
+
+      if (!['admin', 'pharmacist', 'warehouse_staff', 'inspector'].includes(role)) {
+        throw new ApiError(400, 'Invalid role');
+      }
+
+      const { DatabaseService } = await import('../lib/database');
+      const result = await DatabaseService.createUser(
+        name,
+        email,
+        password,
+        role,
+        warehouseId,
+      );
+
+      if (!result.success) {
+        throw new ApiError(409, result.message || 'Failed to create user');
+      }
+
+      res.status(201).json(
+        ApiResponse.ok('User created successfully', result.user).toJSON(),
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async createSuperAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const authReq = req as AuthRequest;
+
+      // Check if user is admin
+      if (!authReq.user || authReq.user.role !== 'admin') {
+        throw new ApiError(403, 'Only admins can create super admins');
+      }
+
+      const { name, email, password } = req.body;
+
+      // Validate input
+      if (!name || !email || !password) {
+        throw new ApiError(400, 'Missing required fields: name, email, password');
+      }
+
+      if (password.length < 8) {
+        throw new ApiError(400, 'Password must be at least 8 characters');
+      }
+
+      const { DatabaseService } = await import('../lib/database');
+      const result = await DatabaseService.createSuperAdmin(name, email, password);
+
+      if (!result.success) {
+        throw new ApiError(409, result.message || 'Failed to create super admin');
+      }
+
+      res.status(201).json(
+        ApiResponse.ok('Super admin created successfully', result.user).toJSON(),
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }

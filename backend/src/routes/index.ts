@@ -9,6 +9,7 @@ import auditRoutes from './audit.routes';
 import importRoutes from './import.routes';
 import reportRoutes from './report.routes';
 import integrationRoutes from './integration.routes';
+import systemRoutes from './system.routes';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/audit', auditRoutes);
 router.use('/import', importRoutes);
 router.use('/reports', reportRoutes);
 router.use('/integration', integrationRoutes);
+router.use('/system', systemRoutes);
 
 export default router;
