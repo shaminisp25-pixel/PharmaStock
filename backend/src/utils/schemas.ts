@@ -143,10 +143,10 @@ export const uploadImportSchema = z.object({
 // Pagination Schemas
 export const paginationSchema = z.object({
   query: z.object({
-    page: z.string().transform(Number).refine(n => n >= 1, 'Page must be >= 1').default('1'),
-    limit: z.string().transform(Number).refine(n => n >= 1 && n <= 100, 'Limit must be between 1-100').default('20'),
-  }),
-});
+    page: z.coerce.number().int().min(1, 'Page must be >= 1').optional().default(1),
+    limit: z.coerce.number().int().min(1, 'Limit must be >= 1').max(10000, 'Limit must be <= 10000').optional().default(20),
+  }).optional(),
+}).passthrough();
 
 // Alert Schemas
 export const resolveAlertSchema = z.object({

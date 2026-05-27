@@ -1,7 +1,10 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store';
+import { AuthManager } from './authManager';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// Use a relative base in dev so Next.js can proxy API requests and keep same-origin
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 // Retry configuration
 const RETRY_ATTEMPTS = 3;
@@ -32,10 +35,16 @@ const addToQueue = (callback: (token: string) => void) => {
 // Add request interceptor - adds auth token from memory/session
 apiClient.interceptors.request.use(
   (config) => {
-    // Try to get token from sessionStorage (more secure than localStorage)
-    const token = typeof window !== 'undefined' 
-      ? sessionStorage.getItem('accessToken') || localStorage.getItem('accessToken')
-      : null;
+    // Don't add Authorization header for auth endpoints (they handle their own auth)
+    const publicAuthEndpoints = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/create-super-admin'];
+    const isPublicEndpoint = publicAuthEndpoints.some(endpoint => config.url?.includes(endpoint));
+    
+    if (isPublicEndpoint) {
+      return config;
+    }
+
+    // Get token from AuthManager (checks both sessionStorage and localStorage)
+    const token = AuthManager.getAccessToken();
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -65,49 +74,50 @@ apiClient.interceptors.response.use(
         });
       }
 
-      originalRequest._retry = true;
+      originalRequest._retry = (originalRequest._retry || 0) + 1;
       isRefreshing = true;
 
       try {
-        const refreshResponse = await axios.post(
-          `${API_BASE_URL}/api/v1/auth/refresh`,
-          {},
-          { 
-            withCredentials: true,
-            timeout: 10000,
+        const newAccessToken = await AuthManager.refreshAccessToken();
+        
+        if (newAccessToken) {
+          // Update Zustand store
+          try {
+            useAuthStore.getState().setAccessToken(newAccessToken);
+          } catch (e) {
+            // Store not available, continue
           }
-        );
-        
-        const { accessToken } = refreshResponse.data.data;
-        
-        // Store token in sessionStorage (HttpOnly cookie is preferred by backend)
-        sessionStorage.setItem('accessToken', accessToken);
-        
-        // Update authorization header
-        originalRequest.headers = originalRequest.headers || {};
-        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-        
-        onRefreshed(accessToken);
-        isRefreshing = false;
-        
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed, clear auth and redirect to login
-        sessionStorage.removeItem('accessToken');
-        localStorage.removeItem('accessToken');
-        sessionStorage.removeItem('user');
-        localStorage.removeItem('user');
-        
-        isRefreshing = false;
-        failedQueue = [];
-        
-        // Redirect to login
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          
+          // Update authorization header
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          
+          onRefreshed(newAccessToken);
+          isRefreshing = false;
+          
+          return apiClient(originalRequest);
         }
-        
-        return Promise.reject(refreshError);
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
       }
+      
+      // Refresh failed, clear auth and redirect to login
+      AuthManager.clearAll();
+      try {
+        useAuthStore.getState().logout();
+      } catch (e) {
+        // Store not available
+      }
+      
+      isRefreshing = false;
+      failedQueue = [];
+      
+      // Redirect to login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
+      
+      return Promise.reject(error);
     }
 
     // Handle 429 Too Many Requests - rate limiting

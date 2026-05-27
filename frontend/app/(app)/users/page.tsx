@@ -8,8 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Search, Edit2, Trash2, Shield } from 'lucide-react';
-import { UserRole, PaginationParams } from '@/types';
+import { UserRole, PaginationParams, User } from '@/types';
 import { format } from 'date-fns';
+import { UserModal } from '@/components/modals/UserModal';
 
 const roleColors: Record<UserRole, string> = {
   admin: 'bg-destructive/10 text-destructive',
@@ -21,8 +22,10 @@ const roleColors: Record<UserRole, string> = {
 export default function UsersPage() {
   const [pagination, setPagination] = useState<PaginationParams>({ page: 1, limit: 20 });
   const [searchQuery, setSearchQuery] = useState('');
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | undefined>();
 
-  const { data: users, isLoading } = useUsers(pagination);
+  const { data: users, isLoading, refetch } = useUsers(pagination);
   const deleteUserMutation = useDeleteUser();
 
   const filteredUsers = users?.data?.filter(
@@ -39,7 +42,14 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold text-foreground">User Management</h1>
           <p className="text-muted-foreground mt-1">Manage system users and permissions</p>
         </div>
-        <Button variant="primary" icon={<Plus className="w-4 h-4" />}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            setSelectedUser(undefined);
+            setShowUserModal(true);
+          }}
+          icon={<Plus className="w-4 h-4" />}
+        >
           Add User
         </Button>
       </div>
@@ -115,7 +125,13 @@ export default function UsersPage() {
                         {format(new Date(user.createdAt), 'dd MMM yyyy')}
                       </td>
                       <td className="py-3 px-4 text-right flex justify-end gap-2">
-                        <button className="p-1 hover:bg-muted rounded transition-colors">
+                        <button
+                          className="p-1 hover:bg-muted rounded transition-colors"
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setShowUserModal(true);
+                          }}
+                        >
                           <Edit2 className="w-4 h-4 text-muted-foreground" />
                         </button>
                         <button
@@ -160,6 +176,18 @@ export default function UsersPage() {
           )}
         </CardContent>
       </Card>
+
+      <UserModal
+        isOpen={showUserModal}
+        onClose={() => {
+          setShowUserModal(false);
+          setSelectedUser(undefined);
+        }}
+        onSuccess={() => {
+          refetch();
+        }}
+        user={selectedUser}
+      />
     </div>
   );
 }

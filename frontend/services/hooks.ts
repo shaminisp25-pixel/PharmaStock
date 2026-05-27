@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/apiClient';
 import { User, ApiResponse, PaginationParams, UserRole } from '@/types';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/store';
 
 // Permission-based access control
@@ -145,6 +145,7 @@ export const useUser = (id: string) => {
 };
 
 export const useCreateUser = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: {
       name: string;
@@ -156,10 +157,14 @@ export const useCreateUser = () => {
       const response = await apiClient.post('/users', data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
   });
 };
 
 export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       id,
@@ -171,14 +176,21 @@ export const useUpdateUser = () => {
       const response = await apiClient.patch(`/users/${id}`, data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
   });
 };
 
 export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.delete(`/users/${id}`);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
     },
   });
 };

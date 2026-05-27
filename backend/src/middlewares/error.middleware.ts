@@ -42,6 +42,13 @@ export const errorHandler = (
 
   // Validation errors from other sources
   if (err instanceof SyntaxError && 'body' in err) {
+    // Include raw body in logs for debugging malformed JSON
+    try {
+      logger.error('Invalid JSON in request body', { rawBody: (req as any).rawBody, path: req.path, method: req.method });
+    } catch (e) {
+      // ignore
+    }
+
     return res.status(400).json({
       success: false,
       message: 'Invalid JSON in request body',

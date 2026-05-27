@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/apiClient';
 import { Warehouse, Drug, Batch, Alert, ApiResponse, PaginationParams, BatchFilters, AlertFilters } from '@/types';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // Warehouse API
 export const useWarehouses = (params?: PaginationParams) => {
@@ -25,28 +25,40 @@ export const useWarehouse = (id: string) => {
 };
 
 export const useCreateWarehouse = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: Omit<Warehouse, 'id' | 'createdAt' | 'updatedAt'>) => {
       const response = await apiClient.post('/warehouses', data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+    },
   });
 };
 
 export const useUpdateWarehouse = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Warehouse> }) => {
       const response = await apiClient.patch(`/warehouses/${id}`, data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+    },
   });
 };
 
 export const useDeleteWarehouse = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.delete(`/warehouses/${id}`);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouses'] });
     },
   });
 };
@@ -74,28 +86,40 @@ export const useDrug = (id: string) => {
 };
 
 export const useCreateDrug = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: Omit<Drug, 'id' | 'createdAt' | 'updatedAt'>) => {
       const response = await apiClient.post('/drugs', data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['drugs'] });
+    },
   });
 };
 
 export const useUpdateDrug = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Drug> }) => {
       const response = await apiClient.patch(`/drugs/${id}`, data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['drugs'] });
+    },
   });
 };
 
 export const useDeleteDrug = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.delete(`/drugs/${id}`);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['drugs'] });
     },
   });
 };
@@ -123,24 +147,33 @@ export const useBatch = (id: string) => {
 };
 
 export const useCreateBatch = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: Omit<Batch, 'id' | 'importedAt' | 'updatedAt'>) => {
       const response = await apiClient.post('/batches', data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    },
   });
 };
 
 export const useUpdateBatchStatus = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const response = await apiClient.patch(`/batches/${id}/status`, { status });
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    },
   });
 };
 
 export const useDispatchBatch = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       id,
@@ -152,23 +185,34 @@ export const useDispatchBatch = () => {
       const response = await apiClient.post(`/batches/${id}/dispatch`, data);
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    },
   });
 };
 
 export const useScanBatch = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (barcode: string) => {
       const response = await apiClient.post('/batches/scan', { barcode });
       return response.data.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+    },
   });
 };
 
 export const useDeleteBatch = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const response = await apiClient.delete(`/batches/${id}`);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
     },
   });
 };

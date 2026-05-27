@@ -6,6 +6,22 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seed...\n');
 
+  // Clear existing data (in order of dependencies)
+  console.log('🧹 Clearing existing data...');
+  try {
+    await prisma.dispatchRecord.deleteMany({});
+    await prisma.importLog.deleteMany({});
+    await prisma.auditLog.deleteMany({});
+    await prisma.alert.deleteMany({});
+    await prisma.batch.deleteMany({});
+    await prisma.drug.deleteMany({});
+    await prisma.user.deleteMany({});
+    await prisma.warehouse.deleteMany({});
+    console.log('✅ Database cleared\n');
+  } catch (err) {
+    console.log('⚠️  Could not clear all data (may already be empty)\n');
+  }
+
   // Create Warehouses
   console.log('📦 Creating warehouses...');
   const warehouse1 = await prisma.warehouse.create({
@@ -184,7 +200,7 @@ async function main() {
       drugId: drug1.id,
       batchNo: 'BATCH-ASP-2024-001',
       quantity: 5000,
-      expiryDate: new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000), // 1 year
+      expiryDate: new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
       warehouseId: warehouse1.id,
       status: 'active',
       importedById: pharmacist.id,
@@ -196,7 +212,7 @@ async function main() {
       drugId: drug2.id,
       batchNo: 'BATCH-INS-2024-001',
       quantity: 2000,
-      expiryDate: new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000), // 6 months
+      expiryDate: new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000),
       warehouseId: warehouse2.id,
       status: 'active',
       importedById: pharmacist.id,
@@ -208,7 +224,7 @@ async function main() {
       drugId: drug3.id,
       batchNo: 'BATCH-AMX-2024-001',
       quantity: 8000,
-      expiryDate: new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000), // 3 months (warning level)
+      expiryDate: new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000),
       warehouseId: warehouse1.id,
       status: 'active',
       importedById: pharmacist.id,
@@ -220,7 +236,7 @@ async function main() {
       drugId: drug4.id,
       batchNo: 'BATCH-PAR-2024-001',
       quantity: 10000,
-      expiryDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 days (critical level)
+      expiryDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
       warehouseId: warehouse1.id,
       status: 'active',
       importedById: warehouse_staff1.id,
@@ -232,7 +248,7 @@ async function main() {
       drugId: drug5.id,
       batchNo: 'BATCH-LIS-2024-001',
       quantity: 3500,
-      expiryDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago (expired)
+      expiryDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       warehouseId: warehouse3.id,
       status: 'expired',
       importedById: warehouse_staff1.id,

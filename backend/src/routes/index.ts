@@ -10,6 +10,7 @@ import importRoutes from './import.routes';
 import reportRoutes from './report.routes';
 import integrationRoutes from './integration.routes';
 import systemRoutes from './system.routes';
+import dispatchRoutes from './dispatch.routes';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/import', importRoutes);
 router.use('/reports', reportRoutes);
 router.use('/integration', integrationRoutes);
 router.use('/system', systemRoutes);
+router.use('/dispatch', dispatchRoutes);
 
 export default router;

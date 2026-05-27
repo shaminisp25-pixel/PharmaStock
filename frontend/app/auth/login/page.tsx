@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useLogin } from '@/services/hooks';
 import { useAuthStore } from '@/store';
+import { AuthManager } from '@/lib/authManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -27,11 +28,25 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    const isAuthenticated = AuthManager.hasValidSession();
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   const onSubmit = async (data: LoginForm) => {
     try {
       const response = await loginMutation.mutateAsync(data);
+      
+      // Update Zustand store
       loginUser(response);
-      localStorage.setItem('accessToken', response.accessToken);
+      
+      // Store token using AuthManager
+      AuthManager.setTokens(response.accessToken);
+      
+      // Redirect to dashboard
       router.push('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
@@ -86,7 +101,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-sm text-muted-foreground">
-          Demo credentials: admin@pharmastock.com / SecurePass123
+          Demo credentials: admin@pharmastock.com / SecurePass123!
         </p>
       </div>
     </div>

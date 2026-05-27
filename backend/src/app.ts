@@ -33,8 +33,18 @@ export function createApp(): Application {
 
   app.set('trust proxy', 1);
 
-  // Body parsing
-  app.use(express.json({ limit: '1mb' }));
+  // Body parsing with raw body capture for better debug on parse errors
+  app.use(express.json({
+    limit: '1mb',
+    verify: (req, _res, buf) => {
+      try {
+        (req as any).rawBody = buf && buf.length ? buf.toString() : '';
+      } catch (e) {
+        // ignore
+      }
+    },
+  }));
+
   app.use(express.urlencoded({ extended: true, limit: '1mb' }));
   app.use(compression());
   app.use(cookieParser());

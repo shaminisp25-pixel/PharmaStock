@@ -10,13 +10,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Search, AlertCircle, Truck } from 'lucide-react';
 import { BatchFilters, BatchStatus } from '@/types';
 import { format, formatDistance } from 'date-fns';
+import { BatchModal } from '@/components/modals/BatchModal';
 
 export default function BatchesPage() {
   const [filters, setFilters] = useState<BatchFilters>({ page: 1, limit: 20 });
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<BatchStatus | 'all'>('all');
+  const [showBatchModal, setShowBatchModal] = useState(false);
 
-  const { data: batches, isLoading } = useBatches(filters);
+  const { data: batches, isLoading, refetch } = useBatches(filters);
   const updateStatusMutation = useUpdateBatchStatus();
   const dispatchMutation = useDispatchBatch();
   const deleteMutation = useDeleteBatch();
@@ -52,7 +54,11 @@ export default function BatchesPage() {
           <h1 className="text-3xl font-bold text-foreground">Batch Management</h1>
           <p className="text-muted-foreground mt-1">Monitor and manage pharmaceutical batches</p>
         </div>
-        <Button variant="primary" icon={<Plus className="w-4 h-4" />}>
+        <Button
+          variant="primary"
+          onClick={() => setShowBatchModal(true)}
+          icon={<Plus className="w-4 h-4" />}
+        >
           Add Batch
         </Button>
       </div>
@@ -155,7 +161,7 @@ export default function BatchesPage() {
                             size="sm"
                             variant="ghost"
                             icon={<Truck className="w-3 h-3" />}
-                            onClick={() => dispatchMutation.mutate({ id: batch.id, data: { quantity: 1, destination: 'Store' } })}
+                            onClick={() => dispatchMutation.mutate({ id: batch.id, data: { quantity: batch.quantity, destination: 'Default Warehouse', prescriptionRef: '' } })}
                           >
                             Dispatch
                           </Button>
@@ -196,6 +202,14 @@ export default function BatchesPage() {
           )}
         </CardContent>
       </Card>
+
+      <BatchModal
+        isOpen={showBatchModal}
+        onClose={() => setShowBatchModal(false)}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
     </div>
   );
 }

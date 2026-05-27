@@ -8,14 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react';
-import { PaginationParams } from '@/types';
+import { PaginationParams, Drug } from '@/types';
+import { DrugModal } from '@/components/modals/DrugModal';
 
 export default function InventoryPage() {
   const [pagination, setPagination] = useState<PaginationParams>({ page: 1, limit: 20 });
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [selectedDrug, setSelectedDrug] = useState<Drug | undefined>();
 
-  const { data: drugs, isLoading: drugsLoading } = useDrugs(pagination);
+  const { data: drugs, isLoading: drugsLoading, refetch } = useDrugs(pagination);
   const { data: warehouses } = useWarehouses({ limit: 1000 });
   const createDrugMutation = useCreateDrug();
   const deleteDrugMutation = useDeleteDrug();
@@ -36,7 +38,10 @@ export default function InventoryPage() {
         </div>
         <Button
           variant="primary"
-          onClick={() => setShowCreateForm(true)}
+          onClick={() => {
+            setSelectedDrug(undefined);
+            setShowCreateForm(true);
+          }}
           icon={<Plus className="w-4 h-4" />}
         >
           Add Drug
@@ -104,7 +109,13 @@ export default function InventoryPage() {
                         {drug.tempMin}°C to {drug.tempMax}°C
                       </td>
                       <td className="py-3 px-4 text-right flex justify-end gap-2">
-                        <button className="p-1 hover:bg-muted rounded transition-colors">
+                        <button
+                          className="p-1 hover:bg-muted rounded transition-colors"
+                          onClick={() => {
+                            setSelectedDrug(drug);
+                            setShowCreateForm(true);
+                          }}
+                        >
                           <Edit2 className="w-4 h-4 text-muted-foreground" />
                         </button>
                         <button
@@ -149,6 +160,18 @@ export default function InventoryPage() {
           )}
         </CardContent>
       </Card>
+
+      <DrugModal
+        isOpen={showCreateForm}
+        onClose={() => {
+          setShowCreateForm(false);
+          setSelectedDrug(undefined);
+        }}
+        onSuccess={() => {
+          refetch();
+        }}
+        drug={selectedDrug}
+      />
     </div>
   );
 }

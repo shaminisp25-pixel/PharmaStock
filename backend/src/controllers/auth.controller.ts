@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import { AuthService } from '../services/auth.service';
+import jwt from 'jsonwebtoken';
+import { getEnv } from '../config/env';
 import { ApiResponse } from '../utils/ApiResponse';
 import { ApiError } from '../utils/ApiError';
 
@@ -25,12 +27,17 @@ export class AuthController {
 
       const result = await AuthService.login(email, password);
 
-      res.cookie('refreshToken', result.refreshToken, {
+      const cookieOptions: any = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        // For development allow Lax so the cookie is sent on top-level navigations.
+        // In production we use 'none' (requires secure=true) for cross-site contexts.
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
+        path: '/',
+      };
+
+      res.cookie('refreshToken', result.refreshToken, cookieOptions);
 
       res.json(
         ApiResponse.ok('Login successful', {
@@ -54,15 +61,21 @@ export class AuthController {
         throw new ApiError(401, 'Refresh token not found');
       }
 
-      const authReq = req as AuthRequest;
-      if (!authReq.user) {
-        throw new ApiError(401, 'User not authenticated');
+      // Verify and decode the refresh token to extract user info
+      const env = getEnv();
+      let decoded: any;
+      try {
+        decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET as string) as any;
+      } catch (err) {
+        throw new ApiError(401, 'Invalid or expired refresh token');
       }
 
-      const accessToken = await AuthService.refreshAccessToken(
-        authReq.user.id,
-        refreshToken,
-      );
+      const userId = decoded?.id;
+      if (!userId) {
+        throw new ApiError(401, 'Invalid refresh token payload');
+      }
+
+      const accessToken = await AuthService.refreshAccessToken(userId, refreshToken);
 
       res.json(
         ApiResponse.ok('Token refreshed successfully', { accessToken }).toJSON(),
