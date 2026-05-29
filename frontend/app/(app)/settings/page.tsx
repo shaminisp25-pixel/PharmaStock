@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUIStore, useAuthStore } from '@/store';
 import { useChangePassword, useLogout } from '@/services/hooks';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -35,6 +35,29 @@ export default function SettingsPage() {
   const [copiedKey, setCopiedKey] = useState(false);
   const changePasswordMutation = useChangePassword();
   const logoutMutation = useLogout();
+
+  const applyThemeToDocument = (nextTheme: 'light' | 'dark' | 'system') => {
+    const root = document.documentElement;
+
+    if (nextTheme === 'system') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.classList.toggle('dark', isDark);
+      return;
+    }
+
+    root.classList.toggle('dark', nextTheme === 'dark');
+  };
+
+  // Apply theme changes to document
+  useEffect(() => {
+    applyThemeToDocument(theme);
+  }, [theme]);
+
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme);
+    applyThemeToDocument(newTheme);
+    toast.success(`Theme changed to ${newTheme}`);
+  };
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,7 +167,8 @@ export default function SettingsPage() {
               {['light', 'dark', 'system'].map((themeOption) => (
                 <button
                   key={themeOption}
-                  onClick={() => setTheme(themeOption as any)}
+                  type="button"
+                  onClick={() => handleThemeChange(themeOption as 'light' | 'dark' | 'system')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-colors ${
                     theme === themeOption
                       ? 'border-primary bg-primary/10'

@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useUIStore } from '@/store';
 import { cn } from '@/lib/utils';
 import {
   Pill,
@@ -15,12 +14,9 @@ import {
   FileText,
   Settings,
   Users,
-  ChevronDown,
-  Menu,
   LogOut,
   Zap,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store';
 
 const navigation = [
@@ -37,29 +33,17 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { sidebarOpen, setSidebarOpen } = useUIStore();
   const { logout } = useAuthStore();
 
   return (
-    <aside
-      className={cn(
-        'bg-card border-r border-border transition-all duration-300',
-        sidebarOpen ? 'w-64' : 'w-20'
-      )}
-    >
+    <aside className="w-64 bg-card border-r border-border shrink-0">
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-6 border-b border-border">
+        <div className="flex items-center gap-2 px-4 py-6 border-b border-border">
           <Link href="/" className="flex items-center gap-2">
             <Pill className="w-8 h-8 text-primary flex-shrink-0" />
-            {sidebarOpen && <span className="font-bold text-foreground">PharmaStock</span>}
+            <span className="font-bold text-foreground">PharmaStock</span>
           </Link>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 hover:bg-muted rounded"
-          >
-            <Menu className="w-4 h-4" />
-          </button>
         </div>
 
         {/* Navigation */}
@@ -80,7 +64,7 @@ export function Sidebar() {
                 )}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />
-                {sidebarOpen && <span>{item.name}</span>}
+                  <span>{item.name}</span>
               </Link>
             );
           })}
@@ -97,7 +81,7 @@ export function Sidebar() {
             className="w-full flex items-center gap-3 px-3 py-2 rounded-md font-medium text-sm text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
-            {sidebarOpen && <span>Logout</span>}
+            <span>Logout</span>
           </button>
         </div>
       </div>

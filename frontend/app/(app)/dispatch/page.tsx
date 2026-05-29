@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Search, Truck, Plus } from 'lucide-react';
+import { DispatchRecord } from '@/types';
 import { format } from 'date-fns';
 
 export default function DispatchPage() {
@@ -16,9 +17,16 @@ export default function DispatchPage() {
 
   const { data: response, isLoading } = useDispatchRecords({ page, limit: 20 });
 
+  const formatDispatchDate = (dateStr?: string) => {
+    if (!dateStr) return 'Unknown date';
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return 'Unknown date';
+    return format(date, 'dd MMM yyyy');
+  };
+
   const dispatches = response?.data || [];
   const filteredRecords = dispatches.filter(
-    (record: any) =>
+    (record: DispatchRecord) =>
       record.batch?.batchNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.batch?.drug?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.destination.toLowerCase().includes(searchQuery.toLowerCase())
@@ -49,7 +57,7 @@ export default function DispatchPage() {
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground">This Month</p>
             <p className="text-2xl font-bold mt-2">
-              {dispatches.filter((d: any) => {
+              {dispatches.filter((d: DispatchRecord) => {
                 const dispatchDate = new Date(d.dispatchedAt);
                 const now = new Date();
                 return dispatchDate.getMonth() === now.getMonth() &&
@@ -116,7 +124,7 @@ export default function DispatchPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredRecords.map((record: any) => (
+                  filteredRecords.map((record: DispatchRecord) => (
                     <tr key={record.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                       <td className="py-3 px-4 font-mono text-foreground">{record.batch?.batchNo || 'N/A'}</td>
                       <td className="py-3 px-4">
@@ -127,7 +135,7 @@ export default function DispatchPage() {
                       </td>
                       <td className="py-3 px-4 text-foreground">{record.destination}</td>
                       <td className="py-3 px-4 text-muted-foreground">
-                        {format(new Date(record.dispatchedAt), 'dd MMM yyyy')}
+                        {formatDispatchDate(record.dispatchedAt)}
                       </td>
                       <td className="py-3 px-4 text-right">
                         <Button size="sm" variant="ghost" icon={<Truck className="w-4 h-4" />}>

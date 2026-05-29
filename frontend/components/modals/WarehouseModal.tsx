@@ -70,12 +70,12 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-card border-border shadow-2xl">
+        <CardHeader className="border-b border-border">
           <CardTitle>{warehouse ? 'Edit Warehouse' : 'Add New Warehouse'}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-foreground">Warehouse Name</label>
@@ -84,7 +84,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Warehouse name"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 
@@ -95,7 +95,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 placeholder="City/Address"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 
@@ -106,7 +106,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                 value={formData.capacity}
                 onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
                 placeholder="Storage capacity"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 
@@ -117,7 +117,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                   type="number"
                   value={formData.tempMin}
                   onChange={(e) => setFormData({ ...formData, tempMin: parseFloat(e.target.value) })}
-                  className="mt-1"
+                  className="mt-1 bg-card"
                 />
               </div>
               <div>
@@ -126,7 +126,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                   type="number"
                   value={formData.tempMax}
                   onChange={(e) => setFormData({ ...formData, tempMax: parseFloat(e.target.value) })}
-                  className="mt-1"
+                  className="mt-1 bg-card"
                 />
               </div>
             </div>
@@ -137,7 +137,7 @@ export function WarehouseModal({ isOpen, onClose, onSuccess, warehouse }: Wareho
                 value={formData.contactPerson}
                 onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
                 placeholder="Contact person name"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 

@@ -29,10 +29,14 @@ export class BatchService {
         where,
         skip,
         take: limit,
-        include: {
+        select: {
+          id: true,
+          batchNo: true,
+          expiryDate: true,
+          quantity: true,
+          status: true,
           drug: { select: { id: true, name: true, manufacturer: true } },
           warehouse: { select: { id: true, name: true } },
-          dispatches: { select: { id: true, quantityDispatched: true, dispatchedAt: true } },
         },
       }),
       prisma.batch.count({ where }),

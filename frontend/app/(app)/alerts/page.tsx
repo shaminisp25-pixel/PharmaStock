@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
-import { AlertFilters, AlertType } from '@/types';
+import { AlertFilters, AlertType, Alert } from '@/types';
 import { format } from 'date-fns';
 
 export default function AlertsPage() {
@@ -33,7 +33,14 @@ export default function AlertsPage() {
     temp_breach: 'Temperature Breach',
   };
 
-  const filteredAlerts = alerts?.data?.filter((alert) => {
+  const formatAlertDate = (dateStr?: string) => {
+    if (!dateStr) return 'Unknown time';
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return 'Unknown time';
+    return format(date, 'dd MMM yyyy, HH:mm');
+  };
+
+  const filteredAlerts = alerts?.data?.filter((alert: Alert) => {
     const matchesType = selectedType === 'all' || alert.alertType === selectedType;
     const matchesResolved = showResolved ? alert.resolved : !alert.resolved;
     return matchesType && matchesResolved;
@@ -61,14 +68,14 @@ export default function AlertsPage() {
               size="sm"
               onClick={() => setShowResolved(false)}
             >
-              Active ({alerts?.data?.filter((a) => !a.resolved).length || 0})
+              Active ({alerts?.data?.filter((a: Alert) => !a.resolved).length || 0})
             </Button>
             <Button
               variant={showResolved ? 'primary' : 'outline'}
               size="sm"
               onClick={() => setShowResolved(true)}
             >
-              Resolved ({alerts?.data?.filter((a) => a.resolved).length || 0})
+              Resolved ({alerts?.data?.filter((a: Alert) => a.resolved).length || 0})
             </Button>
           </div>
         </CardContent>
@@ -94,7 +101,7 @@ export default function AlertsPage() {
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">{typeLabels[type]}</p>
               <p className="text-2xl font-bold mt-2">
-                {alerts?.data?.filter((a) => a.alertType === type).length || 0}
+                {alerts?.data?.filter((a: Alert) => a.alertType === type).length || 0}
               </p>
             </CardContent>
           </Card>
@@ -124,7 +131,7 @@ export default function AlertsPage() {
                 <p className="text-muted-foreground">No alerts to display</p>
               </div>
             ) : (
-              filteredAlerts.map((alert) => (
+              filteredAlerts.map((alert: Alert) => (
                 <div
                   key={alert.id}
                   className={`flex items-start gap-4 p-4 border rounded-lg transition-colors ${
@@ -145,7 +152,7 @@ export default function AlertsPage() {
                       {alert.batch?.drug?.name} • Batch: {alert.batch?.batchNo}
                     </p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      {format(new Date(alert.createdAt), 'dd MMM yyyy, HH:mm')}
+                      {formatAlertDate(alert.createdAt)}
                     </p>
                   </div>
                   {!alert.resolved && (

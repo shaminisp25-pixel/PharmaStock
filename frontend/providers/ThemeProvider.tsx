@@ -8,10 +8,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    
+
     if (theme === 'system') {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.classList.toggle('dark', isDark);
+      const media = window.matchMedia('(prefers-color-scheme: dark)');
+      const applySystemTheme = (matches: boolean) => root.classList.toggle('dark', matches);
+
+      applySystemTheme(media.matches);
+
+      const handleChange = (event: MediaQueryListEvent) => applySystemTheme(event.matches);
+      media.addEventListener('change', handleChange);
+
+      return () => media.removeEventListener('change', handleChange);
     } else {
       root.classList.toggle('dark', theme === 'dark');
     }

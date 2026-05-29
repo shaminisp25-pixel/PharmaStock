@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useBatches, useAlerts, useDrugs, useWarehouses } from '@/services/entityHooks';
 import { useAuditLogs, useImportLogs } from '@/services/reportHooks';
 import { useStockReport } from '@/services/reportHooks';
+import { Batch, Drug, Alert, ImportLog, AuditLog } from '@/types';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -52,7 +53,7 @@ export default function ReportsPage() {
     try {
       setExportingReport(`expiry-${format}`);
       
-      const expiringBatches = batches?.data?.filter(b => {
+      const expiringBatches = batches?.data?.filter((b: Batch) => {
         try {
           const expDate = new Date(b.expiryDate);
           if (isNaN(expDate.getTime())) return false;
@@ -63,12 +64,12 @@ export default function ReportsPage() {
         }
       }) || [];
 
-      const expiredBatches = batches?.data?.filter(b => b.status === 'expired') || [];
+      const expiredBatches = batches?.data?.filter((b: Batch) => b.status === 'expired') || [];
 
       const data: ExportData = {
         headers: ['Batch No', 'Drug Name', 'Manufacturer', 'Warehouse', 'Quantity', 'Expiry Date', 'Status', 'Days to Expiry'],
         rows: [
-          ...expiringBatches.map(b => {
+          ...expiringBatches.map((b: Batch) => {
             const expDate = new Date(b.expiryDate);
             const daysToExpiry = isNaN(expDate.getTime()) ? 0 : Math.ceil((expDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
             return [
@@ -82,7 +83,7 @@ export default function ReportsPage() {
               daysToExpiry,
             ];
           }),
-          ...expiredBatches.map(b => [
+          ...expiredBatches.map((b: Batch) => [
             b.batchNo,
             b.drug?.name || 'N/A',
             b.drug?.manufacturer || 'N/A',
@@ -121,11 +122,11 @@ export default function ReportsPage() {
 
       const data: ExportData = {
         headers: ['Drug Name', 'Manufacturer', 'Total Batches', 'Total Quantity', 'Warehouses', 'Category'],
-        rows: (drugs?.data || []).map(drug => [
+        rows: (drugs?.data || []).map((drug: Drug) => [
           drug.name,
           drug.manufacturer,
-          batches?.data?.filter(b => b.drugId === drug.id).length || 0,
-          batches?.data?.filter(b => b.drugId === drug.id).reduce((sum, b) => sum + b.quantity, 0) || 0,
+          batches?.data?.filter((b: Batch) => b.drugId === drug.id).length || 0,
+          batches?.data?.filter((b: Batch) => b.drugId === drug.id).reduce((sum: number, b: Batch) => sum + b.quantity, 0) || 0,
           warehouses?.data?.length || 0,
           drug.category || 'N/A',
         ]),
@@ -157,7 +158,7 @@ export default function ReportsPage() {
 
       const data: ExportData = {
         headers: ['Alert Type', 'Batch No', 'Drug Name', 'Message', 'Status', 'Created At'],
-        rows: (alerts?.data || []).map(alert => [
+        rows: (alerts?.data || []).map((alert: Alert) => [
           alert.alertType,
           alert.batch?.batchNo || 'N/A',
           alert.batch?.drug?.name || 'N/A',
@@ -193,7 +194,7 @@ export default function ReportsPage() {
 
       const data: ExportData = {
         headers: ['User', 'Action', 'Entity Type', 'Entity ID', 'Changes', 'Timestamp'],
-        rows: (auditLogs?.data || []).map(log => [
+        rows: (auditLogs?.data || []).map((log: AuditLog & { user?: { name: string } }) => [
           log.user?.name || 'N/A',
           log.action,
           log.entityType,
@@ -432,7 +433,7 @@ export default function ReportsPage() {
                 <Skeleton className="h-8 w-20 mt-2" />
               ) : (
                 <p className="text-2xl font-bold text-warning mt-2">
-                  {alerts?.data?.filter(a => !a.resolved).length || 0}
+                  {alerts?.data?.filter((a: Alert) => !a.resolved).length || 0}
                 </p>
               )}
             </div>

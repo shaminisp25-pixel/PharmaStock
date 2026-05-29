@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/apiClient';
-import { User, ApiResponse, PaginationParams, UserRole } from '@/types';
+import { User, ApiResponse, PaginationParams, UserRole, PaginatedResponse } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/store';
 
@@ -128,7 +128,7 @@ export const useUsers = (params?: PaginationParams) => {
     queryKey: ['users', params],
     queryFn: async () => {
       const response = await apiClient.get('/users', { params });
-      return response.data.data as ApiResponse<User[]>;
+      return response.data as PaginatedResponse<User>;
     },
   });
 };

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Search, AlertCircle, Truck } from 'lucide-react';
-import { BatchFilters, BatchStatus } from '@/types';
+import { BatchFilters, BatchStatus, Batch } from '@/types';
 import { format, formatDistance } from 'date-fns';
 import { BatchModal } from '@/components/modals/BatchModal';
 
@@ -31,7 +31,14 @@ export default function BatchesPage() {
     quarantined: 'bg-warning/10 text-warning',
   };
 
-  const filteredBatches = batches?.data?.filter((batch) => {
+  const formatBatchDate = (dateStr?: string) => {
+    if (!dateStr) return 'Unknown date';
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return 'Unknown date';
+    return format(date, 'dd MMM yyyy');
+  };
+
+  const filteredBatches = batches?.data?.filter((batch: Batch) => {
     const matchesSearch =
       batch.batchNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       batch.drug?.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -129,7 +136,7 @@ export default function BatchesPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredBatches.map((batch) => (
+                  filteredBatches.map((batch: Batch) => (
                     <tr key={batch.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                       <td className="py-3 px-4 font-mono text-foreground">{batch.batchNo}</td>
                       <td className="py-3 px-4">
@@ -141,7 +148,7 @@ export default function BatchesPage() {
                       <td className="py-3 px-4 text-foreground">{batch.quantity}</td>
                       <td className="py-3 px-4">
                         <div className="text-foreground">
-                          {format(new Date(batch.expiryDate), 'dd MMM yyyy')}
+                          {formatBatchDate(batch.expiryDate)}
                           {isExpiring(batch.expiryDate) && (
                             <p className="text-xs text-warning flex items-center gap-1 mt-1">
                               <AlertCircle className="w-3 h-3" />

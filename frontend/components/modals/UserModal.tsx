@@ -79,12 +79,12 @@ export function UserModal({ isOpen, onClose, onSuccess, user }: UserModalProps) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-card border-border shadow-2xl">
+        <CardHeader className="border-b border-border">
           <CardTitle>{user ? 'Edit User' : 'Add New User'}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-foreground">Full Name</label>
@@ -93,7 +93,7 @@ export function UserModal({ isOpen, onClose, onSuccess, user }: UserModalProps) 
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Full name"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 
@@ -105,7 +105,7 @@ export function UserModal({ isOpen, onClose, onSuccess, user }: UserModalProps) 
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="Email address"
-                className="mt-1"
+                className="mt-1 bg-card"
               />
             </div>
 
@@ -118,7 +118,7 @@ export function UserModal({ isOpen, onClose, onSuccess, user }: UserModalProps) 
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="Password"
-                  className="mt-1"
+                  className="mt-1 bg-card"
                 />
               </div>
             )}
@@ -128,7 +128,7 @@ export function UserModal({ isOpen, onClose, onSuccess, user }: UserModalProps) 
               <select
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-background"
+                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-card"
               >
                 {ROLES.map((role) => (
                   <option key={role} value={role}>

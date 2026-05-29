@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { useBatches, useAlerts, useWarehouses, useDrugs } from '@/services/entityHooks';
+import { Batch, Alert } from '@/types';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -62,32 +63,41 @@ function StatCard({
 }
 
 export default function DashboardPage() {
-  // Fetch all data with automatic refetch on component mount
-  const { data: batches, isLoading: batchesLoading, refetch: refetchBatches } = useBatches({ limit: 1000 });
-  const { data: alerts, isLoading: alertsLoading, refetch: refetchAlerts } = useAlerts({ limit: 100 });
-  const { data: warehouses, isLoading: warehousesLoading, refetch: refetchWarehouses } = useWarehouses({ limit: 100 });
-  const { data: drugs, isLoading: drugsLoading } = useDrugs({ limit: 1000 });
+  // Fetch paginated data with optimized limits
+  const { data: batches, isLoading: batchesLoading, refetch: refetchBatches } = useBatches({ limit: 20, page: 1 });
+  const { data: alerts, isLoading: alertsLoading, refetch: refetchAlerts } = useAlerts({ limit: 10, page: 1 });
+  const { data: warehouses, isLoading: warehousesLoading, refetch: refetchWarehouses } = useWarehouses({ limit: 20, page: 1 });
+  const { data: drugs, isLoading: drugsLoading } = useDrugs({ limit: 20, page: 1 });
 
-  // Set up real-time data sync - refetch every 30 seconds
+  // Set up real-time data sync - refetch every 2 minutes (reduced from 30s)
   useEffect(() => {
     const interval = setInterval(() => {
       refetchBatches();
       refetchAlerts();
       refetchWarehouses();
-    }, 30000); // 30 seconds
+    }, 120000); // 2 minutes - reduced request frequency
 
     return () => clearInterval(interval);
   }, [refetchBatches, refetchAlerts, refetchWarehouses]);
 
   // Calculate statistics
   const totalBatches = batches?.meta?.total || 0;
-  const activeBatches = batches?.data?.filter((b) => b.status === 'active').length || 0;
-  const expiredBatches = batches?.data?.filter((b) => b.status === 'expired').length || 0;
-  const dispatchedBatches = batches?.data?.filter((b) => b.status === 'dispatched').length || 0;
+  const activeBatches = batches?.data?.filter((b: Batch) => b.status === 'active').length || 0;
+  const expiredBatches = batches?.data?.filter((b: Batch) => b.status === 'expired').length || 0;
+  const dispatchedBatches = batches?.data?.filter((b: Batch) => b.status === 'dispatched').length || 0;
   const totalAlerts = alerts?.meta?.total || 0;
-  const unresolvedAlerts = alerts?.data?.filter((a) => !a.resolved).length || 0;
+  const unresolvedAlerts = alerts?.data?.filter((a: Alert) => !a.resolved).length || 0;
   const totalDrugs = drugs?.meta?.total || 0;
   const warehouseCount = warehouses?.meta?.total || 0;
+  const expiringSoonCount = batches?.data?.filter((b: Batch) => {
+    const expiry = new Date(b.expiryDate);
+    if (Number.isNaN(expiry.getTime())) return false;
+    const daysToExpiry = Math.ceil((expiry.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    return daysToExpiry > 0 && daysToExpiry <= 30;
+  }).length || 0;
+  const totalQuantity = batches?.data?.reduce((sum: number, batch: Batch) => sum + batch.quantity, 0) || 0;
+  const averageBatchSize = batches?.data?.length ? Math.round(totalQuantity / batches.data.length) : 0;
+  const activeAlertRate = totalAlerts ? Math.round((unresolvedAlerts / totalAlerts) * 100) : 0;
 
   // Helper function to validate dates
   const isValidDate = (date: any) => {
@@ -103,7 +113,7 @@ export default function DashboardPage() {
       const date = subDays(new Date(), i);
       const dayName = format(date, 'EEE');
       
-      const alertsCount = alerts?.data?.filter((a) => {
+      const alertsCount = alerts?.data?.filter((a: Alert) => {
         if (!isValidDate(a.createdAt)) return false;
         const alertDate = new Date(a.createdAt);
         try {
@@ -113,9 +123,9 @@ export default function DashboardPage() {
         }
       }).length || 0;
 
-      const batchesCount = batches?.data?.filter((b) => {
-        if (!isValidDate(b.createdAt)) return false;
-        const batchDate = new Date(b.createdAt);
+      const batchesCount = batches?.data?.filter((b: Batch) => {
+        if (!isValidDate(b.importedAt)) return false;
+        const batchDate = new Date(b.importedAt);
         try {
           return format(batchDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd');
         } catch {
@@ -138,9 +148,19 @@ export default function DashboardPage() {
       { name: 'Active', value: activeBatches || 0, color: '#10b981' },
       { name: 'Dispatched', value: dispatchedBatches || 0, color: '#3b82f6' },
       { name: 'Expired', value: expiredBatches || 0, color: '#ef4444' },
-      { name: 'Quarantined', value: (batches?.data?.filter((b) => b.status === 'quarantined').length || 0), color: '#f59e0b' },
+      { name: 'Quarantined', value: (batches?.data?.filter((b: Batch) => b.status === 'quarantined').length || 0), color: '#f59e0b' },
     ];
   }, [activeBatches, dispatchedBatches, expiredBatches, batches?.data]);
+
+  const inventoryByDrug = useMemo(() => {
+    return (drugs?.data || [])
+      .slice(0, 6)
+      .map((drug) => ({
+        name: drug.name,
+        quantity: batches?.data?.filter((batch: Batch) => batch.drugId === drug.id).reduce((sum: number, batch: Batch) => sum + batch.quantity, 0) || 0,
+      }))
+      .sort((a, b) => b.quantity - a.quantity);
+  }, [drugs?.data, batches?.data]);
 
   return (
     <div className="p-6 space-y-6">
@@ -179,6 +199,38 @@ export default function DashboardPage() {
           icon={<WarehouseIcon className="w-6 h-6 text-success" />}
           trend={`${totalDrugs} drugs`}
           loading={warehousesLoading}
+        />
+      </div>
+
+      {/* Secondary Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <StatCard
+          title="Expiring Soon"
+          value={expiringSoonCount}
+          icon={<AlertCircle className="w-6 h-6 text-warning" />}
+          trend="Next 30 days"
+          loading={batchesLoading}
+        />
+        <StatCard
+          title="Average Batch Size"
+          value={averageBatchSize}
+          icon={<Package className="w-6 h-6 text-primary" />}
+          trend={`${totalQuantity} total units`}
+          loading={batchesLoading}
+        />
+        <StatCard
+          title="Alert Rate"
+          value={`${activeAlertRate}%`}
+          icon={<AlertCircle className="w-6 h-6 text-destructive" />}
+          trend="Unresolved alerts"
+          loading={alertsLoading}
+        />
+        <StatCard
+          title="Inventory Coverage"
+          value={inventoryByDrug.length}
+          icon={<WarehouseIcon className="w-6 h-6 text-success" />}
+          trend="Top tracked drugs"
+          loading={drugsLoading}
         />
       </div>
 
@@ -251,6 +303,28 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Inventory by Drug */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Inventory by Drug</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {batchesLoading || drugsLoading ? (
+              <Skeleton className="h-[300px] w-full" />
+            ) : (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={inventoryByDrug} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+                  <YAxis type="category" dataKey="name" width={100} stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
+                  <Bar dataKey="quantity" fill="hsl(var(--primary))" radius={[0, 6, 6, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Recent Alerts */}
@@ -267,7 +341,7 @@ export default function DashboardPage() {
             </div>
           ) : alerts?.data && alerts.data.length > 0 ? (
             <div className="space-y-3">
-              {alerts.data.slice(0, 5).map((alert) => (
+              {alerts.data.slice(0, 5).map((alert: Alert) => (
                 <div key={alert.id} className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted transition-colors">
                   <div className="flex items-center gap-3 flex-1">
                     <div className={`w-2 h-2 rounded-full ${alert.resolved ? 'bg-success' : 'bg-warning'}`} />
@@ -312,6 +386,32 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Operational Snapshot</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm text-muted-foreground">Urgent Alerts</p>
+              <p className="mt-2 text-2xl font-bold text-destructive">{unresolvedAlerts}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm text-muted-foreground">Total Quantity</p>
+              <p className="mt-2 text-2xl font-bold text-primary">{totalQuantity}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm text-muted-foreground">Drugs Tracked</p>
+              <p className="mt-2 text-2xl font-bold text-success">{totalDrugs}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <p className="text-sm text-muted-foreground">Warehouses Active</p>
+              <p className="mt-2 text-2xl font-bold text-warning">{warehouseCount}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

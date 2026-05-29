@@ -23,7 +23,7 @@ export default function InventoryPage() {
   const deleteDrugMutation = useDeleteDrug();
 
   const filteredDrugs = drugs?.data?.filter(
-    (drug) =>
+    (drug: Drug) =>
       drug.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       drug.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
@@ -98,7 +98,7 @@ export default function InventoryPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredDrugs.map((drug) => (
+                  filteredDrugs.map((drug: Drug) => (
                     <tr key={drug.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                       <td className="py-3 px-4 font-medium text-foreground">{drug.name}</td>
                       <td className="py-3 px-4 text-muted-foreground">{drug.manufacturer}</td>

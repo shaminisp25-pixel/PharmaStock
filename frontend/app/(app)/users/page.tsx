@@ -28,8 +28,15 @@ export default function UsersPage() {
   const { data: users, isLoading, refetch } = useUsers(pagination);
   const deleteUserMutation = useDeleteUser();
 
+  const formatUserDate = (dateStr?: string) => {
+    if (!dateStr) return 'Unknown date';
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return 'Unknown date';
+    return format(date, 'dd MMM yyyy');
+  };
+
   const filteredUsers = users?.data?.filter(
-    (user) =>
+    (user: User) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
@@ -106,7 +113,7 @@ export default function UsersPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredUsers.map((user) => (
+                  filteredUsers.map((user: User) => (
                     <tr key={user.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                       <td className="py-3 px-4 font-medium text-foreground">{user.name}</td>
                       <td className="py-3 px-4 text-muted-foreground font-mono text-xs">{user.email}</td>
@@ -122,7 +129,7 @@ export default function UsersPage() {
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-muted-foreground text-xs">
-                        {format(new Date(user.createdAt), 'dd MMM yyyy')}
+                        {formatUserDate(user.createdAt)}
                       </td>
                       <td className="py-3 px-4 text-right flex justify-end gap-2">
                         <button

@@ -7,7 +7,8 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/dashboard');
+    // Replace instead of push to avoid stacking in history
+    router.replace('/dashboard');
   }, [router]);
 
   return null;

@@ -62,12 +62,12 @@ export function BatchModal({ isOpen, onClose, onSuccess }: BatchModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center overflow-y-auto">
-      <Card className="w-full max-w-md my-8">
-        <CardHeader>
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center overflow-y-auto p-4">
+      <Card className="w-full max-w-md my-8 bg-card border-border shadow-2xl">
+        <CardHeader className="border-b border-border">
           <CardTitle>Add New Batch</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-foreground">Batch Number</label>
@@ -86,7 +86,7 @@ export function BatchModal({ isOpen, onClose, onSuccess }: BatchModalProps) {
                 required
                 value={formData.drugId}
                 onChange={(e) => setFormData({ ...formData, drugId: e.target.value })}
-                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-background"
+                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-card"
               >
                 <option value="">Select a drug</option>
                 {drugs?.data?.map((drug) => (
@@ -103,7 +103,7 @@ export function BatchModal({ isOpen, onClose, onSuccess }: BatchModalProps) {
                 required
                 value={formData.warehouseId}
                 onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value })}
-                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-background"
+                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-card"
               >
                 <option value="">Select a warehouse</option>
                 {warehouses?.data?.map((warehouse) => (
@@ -164,7 +164,7 @@ export function BatchModal({ isOpen, onClose, onSuccess }: BatchModalProps) {
                 value={formData.storageNotes}
                 onChange={(e) => setFormData({ ...formData, storageNotes: e.target.value })}
                 placeholder="Storage instructions"
-                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-background"
+                className="w-full mt-1 p-2 border border-input rounded-md text-foreground bg-card"
                 rows={2}
               />
             </div>

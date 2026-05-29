@@ -17,7 +17,7 @@ function Toast({ id, title, description, variant = 'default', onDismiss }: Toast
     <div
       className={`flex items-start gap-3 px-4 py-3 rounded-lg border shadow-lg animate-in fade-in slide-in-from-right-full ${
         variant === 'destructive'
-          ? 'bg-destructive/10 border-destructive text-destructive'
+          ? 'bg-destructive border-destructive text-white'
           : 'bg-card border-border'
       }`}
     >
